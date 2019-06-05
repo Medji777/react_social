@@ -1,0 +1,59 @@
+.dialogs {
+    display: grid;
+    grid-template-areas: 'h h' 'c b' 'c d';
+    grid-template-rows: 50px 1fr;
+    grid-template-columns: 3fr 9fr;
+}
+
+.dialogs h2 {
+    grid-area: h;
+    padding: 10px;
+}
+
+.dialogs .dialogs_items {
+    grid-area: c;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #3f51b5c2;
+}
+
+.dialogs_items .dialog_item {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.dialogs_items .dialog_item img {
+    width: 40px;
+    height: 40px;
+    background: #cccccca3;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dialogs_items .dialog_item a {
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.dialogs_items .dialog_item a.active {
+    color: #ca864b;
+}
+
+.dialogs .messages, .dialogs .message_post {
+    margin-left: 50px;
+}
+
+.dialogs .messages {
+    grid-area: b;
+}
+
+.dialogs .message_post {
+    grid-area: d;
+}
+
+.messages .message_item {
+
+}
