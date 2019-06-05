@@ -1,0 +1,45 @@
+.user, .user_avatar, .user_cont {
+    display: flex;
+}
+.user {
+    flex-direction: row;
+    margin: 10px 10px;
+}
+.user .user_avatar {
+    flex-direction: column;
+    margin-right: 15px;
+}
+.user .user_avatar img {
+    width: 53px;
+    height: 53px;
+    background: #cccccca3;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 auto;
+}
+.user .user_avatar button {
+    margin: 10px auto 0;
+    user-select: none;
+}
+.user .user_cont {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 87%;
+    margin: 0 5px 10px 5px;
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 10px;
+    background: #fff;
+    box-sizing: border-box;
+}
+.user .user_cont__left, .user .user_cont__right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.user .user_cont__left {
+
+}
+.user .user_cont__right {
+
+}
