@@ -1,0 +1,12 @@
+.header {
+    grid-area: h;
+    background: #ccad78;
+    display: grid;
+    grid-template-areas: 'a b';
+    grid-template-columns: 5fr 1fr;
+}
+.header img {
+    width: 50px;
+    grid-area: a;
+}
+

@@ -1,0 +1,23 @@
+.wrap_loading {
+    min-height: 350px;
+}
+
+.loading {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    border-top-color: #1add05;
+    display: block;
+    margin: 0 auto;
+    animation: loading .5s infinite linear;
+}
+
+@keyframes loading {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

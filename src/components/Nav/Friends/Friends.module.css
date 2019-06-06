@@ -1,0 +1,32 @@
+.friends {
+    margin-top: 50px;
+}
+.friends h3 {
+    color: rgba(255,255,255,1);
+}
+.friends .friends_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+.friends .friends_list .friend {
+    margin-right: 7%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.friends .friends_list .friend img {
+    width: 40px;
+    height: 40px;
+    background: #cccccca3;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.friends .friends_list .friend p {
+    font-size: 0.7em;
+    font-family: sans-serif;
+    color: rgba(255,255,255,1);
+}
