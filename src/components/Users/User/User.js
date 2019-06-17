@@ -1,15 +1,17 @@
 import React from 'react';
 import styled from './User.module.css';
+import {Link} from "react-router-dom";
 
-const User = ({img,id,name,status,city,country,btn,follow,unfollow}) => {
-
+const User = ({img,id,name,status,city,country,btn,follow,unfollow,toggleDisable,isAuth}) => {
+    debugger;
     return (
         <div className={styled.user}>
             <div className={styled.user_avatar}>
-                <img src={img} alt=""/>
-                {(btn) ?
-                    <button onClick={()=> unfollow(id)}>unfollow</button> :
-                    <button onClick={()=> follow(id)}>follow</button>
+                <Link to={`profile/${id}`}><img src={img} alt=""/></Link>
+                {
+                    isAuth ? (btn) ?
+                        <button onClick={()=> unfollow(id)} disabled={toggleDisable.some(uId => uId === id)}>unfollow</button> :
+                        <button onClick={()=> follow(id)} disabled={toggleDisable.some(uId => uId === id)}>follow</button> : ''
                 }
             </div>
             <div className={styled.user_cont}>

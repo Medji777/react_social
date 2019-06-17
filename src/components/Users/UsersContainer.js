@@ -1,30 +1,21 @@
 import React from 'react';
 import {connect} from "react-redux";
-import API from "../../DAL/api";
 import {UsersSelector} from "../../DataBLL/selectors";
 import Users from "./Users";
 import {
     setCurrentPage,
     follow,
-    setUsers,
-    setTotalCount,
     setCountUsers,
     unfollow,
     updateUsers,
-    setSearchUsers,
-    setSearchUsersName,
-    resetSearchUsersName
+    resetSearchUsersName,
+    getUsers,
+    getUsersSearch
 } from "../../DataBLL/usersReducer";
 
 class UsersContainer extends React.Component {
 
-    state = {
-        isLoading: false,
-        isLoadingSearch: false
-    };
-
     getUsersMore = () => {
-        this.setState({isLoading: !this.state.isLoading});
         this.setUsersMore();
     };
 
@@ -36,7 +27,6 @@ class UsersContainer extends React.Component {
 
     getStartUsers = () => {
         let {currentPage, updateUsers} = this.props;
-        this.setState({isLoading: !this.state.isLoading});
         updateUsers(); // users: [] , currentPage: 1
         this.getFetchData(currentPage);
     };
@@ -52,18 +42,11 @@ class UsersContainer extends React.Component {
 
     getUpdateUsers = () => {
         let {currentPage, count} = this.props;
-        this.setState({isLoading: !this.state.isLoading});
         this.getFetchData(currentPage, count);
     };
 
     getFetchData = (page, count = 10) => {
-        API.getUsers(page,count)
-            .then(res => {
-                this.props.setUsers([...res.data.items]);
-                this.props.setTotalCount(res.data.totalCount);
-                this.setState({isLoading: false});
-            })
-            .catch(e => console.log(e.message))
+        this.props.getUsers(page,count); // GET - thunk - запрос пользователей getUsers в usersReducer
     };
 
     setUserName = (e) => {
@@ -72,14 +55,7 @@ class UsersContainer extends React.Component {
     };
 
     getSearchUsers = (str, count = 100) => {
-        this.setState({isLoadingSearch: true});
-        this.props.setSearchUsersName(str);
-        API.getSearchUsers(str,count)
-            .then(res => {
-                this.props.setSearchUsers(res.data.items);
-                this.setState({isLoadingSearch: false});
-            })
-            .catch(e => console.log(e.message))
+        this.props.getUsersSearch(str,count) // GET - thunk - запрос поиска пользователя getUsersSearch в usersReducer
     };
 
     componentDidMount() {
@@ -100,15 +76,17 @@ class UsersContainer extends React.Component {
     }
 
     render() {
-        const {users, follow, unfollow, totalCount, searchUsersInfo} = this.props;
+        const {users, follow, unfollow, totalCount, searchUsersInfo,isLoading,isLoadingSearch,toggleDisable,isAuth} = this.props;
         return (
             <Users users={users}
+                   isAuth={isAuth}
                    follow={follow}
                    unfollow={unfollow}
                    totalCount={totalCount}
                    searchUsersInfo={searchUsersInfo}
-                   isLoading={this.state.isLoading}
-                   isLoadingSearch={this.state.isLoadingSearch}
+                   isLoading={isLoading}
+                   isLoadingSearch={isLoadingSearch}
+                   toggleDisable={toggleDisable}
                    setUserName={this.setUserName}
                    setCount={this.setCount}
                    getUsersMore={this.getUsersMore}
@@ -118,12 +96,17 @@ class UsersContainer extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    let {users, currentPage, count, totalCount, searchUsers} = state.usersPage;
+    let {users, currentPage, count, totalCount, searchUsers,isLoading,isLoadingSearch,toggleDisable} = state.usersPage;
+    let {isAuth} = state.auth;
     return {
         users,
         currentPage,
         count,
         totalCount,
+        isLoading,
+        isLoadingSearch,
+        toggleDisable,
+        isAuth,
         searchUsersInfo: UsersSelector(searchUsers)
     }
 };
@@ -132,12 +115,10 @@ export default connect(mapStateToProps, {
     //AC - Action Creators (dispatch - обрабатывется автоматически)
     follow,
     unfollow,
-    setUsers,
     setCurrentPage,
-    setTotalCount,
     setCountUsers,
-    setSearchUsers,
-    setSearchUsersName,
     resetSearchUsersName,
-    updateUsers
+    updateUsers,
+    getUsers,
+    getUsersSearch
 })(UsersContainer);
