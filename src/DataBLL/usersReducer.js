@@ -1,7 +1,10 @@
 import ConstantType from "./ConstantType";
 import API from "../DAL/api";
 
-const {FOLLOW,UNFOLLOW,SET_USERS,SET_CURRENT_PAGE,SET_TOTAL_COUNT,UPDATE_USERS,SET_SEARCH_USERS,SET_SEARCH_USERS_NAME,RESET_SEARCH_USERS_NAME,SET_COUNT_USERS} = ConstantType;
+const {FOLLOW,UNFOLLOW,SET_USERS,
+       SET_CURRENT_PAGE,SET_TOTAL_COUNT,UPDATE_USERS,
+       SET_SEARCH_USERS,SET_SEARCH_USERS_NAME,RESET_SEARCH_USERS_NAME,
+       SET_COUNT_USERS,IS_LOADING,IS_LOADING_SEARCH,DISABLE} = ConstantType;
 
 const initialState = {
     users: [],
@@ -9,6 +12,8 @@ const initialState = {
     count: 10,
     totalCount: null,
     isLoading: false,
+    isLoadingSearch: false,
+    toggleDisable: [],
     searchUsers: {
         name: '',
         users: []
@@ -90,6 +95,24 @@ const usersReducer = (state = initialState, action) => {
                 }
             }
         }
+        case IS_LOADING: {
+            return {
+                ...state,
+                isLoading: action.flag
+            }
+        }
+        case IS_LOADING_SEARCH: {
+            return {
+                ...state,
+                isLoadingSearch: action.flag
+            }
+        }
+        case DISABLE: {
+            return {
+                ...state,
+                toggleDisable: action.flag ? [...state.toggleDisable, action.id] : state.toggleDisable.filter(id => id !== action.id)
+            }
+        }
         default:
             return state;
     }
@@ -105,25 +128,56 @@ export const setSearchUsersName = (name) => ({type: SET_SEARCH_USERS_NAME, name}
 export const setSearchUsers = (users) => ({type: SET_SEARCH_USERS, users});
 export const resetSearchUsersName = () => ({type: RESET_SEARCH_USERS_NAME});
 export const updateUsers = () => ({type: UPDATE_USERS});
+export const isLoading = (flag) => ({type: IS_LOADING,flag});
+export const isLoadingSearch = (flag) => ({type: IS_LOADING_SEARCH,flag});
+export const isDisable = (id,flag) => ({type: DISABLE,id,flag});
 
 export const follow = (id) => (dispatch) => {
+    dispatch(isDisable(id,true));
     API.follow(id)
         .then(res => {
             if(res.data.resultCode === 0){
-                dispatch(setFollow(id))
+                dispatch(setFollow(id));
+                dispatch(isDisable(id,false))
             }
         })
         .catch(e => console.log(e.message))
 };
 
 export const unfollow = (id) => (dispatch) => {
+    dispatch(isDisable(id,true));
     API.unfollow(id)
         .then(res => {
             if(res.data.resultCode === 0){
-                dispatch(setUnfollow(id))
+                dispatch(setUnfollow(id));
+                dispatch(isDisable(id,false))
             }
         })
         .catch(e => console.log(e.message))
 };
+
+export const getUsers = (page,count) => (dispatch) => {
+    dispatch(isLoading(true));
+    API.getUsers(page,count)
+        .then(res => {
+            dispatch(setUsers([...res.data.items]));
+            dispatch(setTotalCount(res.data.totalCount));
+            dispatch(isLoading(false));
+        })
+        .catch(e => console.log(e.message))
+};
+
+export const getUsersSearch = (str,count) => (dispatch) => {
+    dispatch(isLoadingSearch(true));
+    dispatch(setSearchUsersName(str));
+    API.getSearchUsers(str,count)
+        .then(res => {
+            dispatch(setSearchUsers(res.data.items));
+            dispatch(isLoadingSearch(false));
+        })
+        .catch(e => console.log(e.message))
+};
+
+//const sryui = (s = initialState,action,c = {}) => ({...s, task: s.task.map((e)=>{e.id === action.id ? ({...e, ...c}) : (e)})});
 
 export default usersReducer;
