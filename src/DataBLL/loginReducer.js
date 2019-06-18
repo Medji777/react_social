@@ -3,7 +3,7 @@ import {setIsAuth,getUserInfoAuth} from "./authReducer";
 import API from "../DAL/api";
 
 
-const {SET_STATUS_LOGIN,SET_MESSAGE_LOGIN,SET_ID} = ConstantType;
+const {SET_STATUS_LOGIN,SET_MESSAGE_LOGIN,SET_INITIAL_ID} = ConstantType;
 
 export const statuses = {
     INIT: 'INIT',
@@ -33,7 +33,7 @@ const loginReducer = (state = initialState,action) => {
                 message: action.message
             }
         }
-        case SET_ID: {
+        case SET_INITIAL_ID: {
             return{
                 ...state,
                 currentId: action.id
@@ -47,13 +47,12 @@ const loginReducer = (state = initialState,action) => {
 
 export const setStatus = (status) => ({type: SET_STATUS_LOGIN, status});
 export const setMessage = (message) => ({type: SET_MESSAGE_LOGIN, message});
-export const setUserId = (id) => ({type: SET_ID, id});
+export const setUserId = (id) => ({type: SET_INITIAL_ID, id});
 
 export const login = (email, password, rememberMe, c) => (dispatch) => {
     dispatch(setStatus(statuses.INPROGRESS));
     API.logIn(email, password, rememberMe)
         .then(res => {
-            debugger;
             if (res.data.resultCode === 0) {
                 dispatch(setStatus(statuses.SUCCESS));
                 dispatch(setUserId(res.data.data.userId));

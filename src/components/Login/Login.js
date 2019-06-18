@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import {login, statuses} from './../../DataBLL/loginReducer';
 import {Redirect} from 'react-router-dom';
 import LoginForm from "./LoginForm";
+import {reduxForm} from "redux-form";
+import styled from './Login.module.css';
 
 export const Login = ({login,status,message,isAuth}) => {
 
@@ -10,23 +12,26 @@ export const Login = ({login,status,message,isAuth}) => {
         return <Redirect to='/profile'/>
     }
 
-    const getInputValue = (e) => {
-        e.preventDefault();
-        debugger
-        let {text,password,checkbox} = e.currentTarget.elements;
-        login && login(text.value,password.value,checkbox.checked);
+    const getInputValue = (value) => {
+        login && login(value.text,value.password,value.checkbox);
     };
 
     let errorMessageBlock = status === statuses.ERROR && <div className="error">{message}</div>;
 
     return (
-        <div>
-            <h2>Authorization</h2>
-            <LoginForm errorMessageBlock={errorMessageBlock} getInputValue={getInputValue} statuses={statuses}/>
+        <div className={styled.auth}>
+            <div className={styled.auth_page}>
+                <h2>Authorization</h2>
+                <LoginReduxForm onSubmit={getInputValue} errorMessageBlock={errorMessageBlock} statuses={statuses} status={status}/>
+            </div>
         </div>
     );
 
 };
+
+const LoginReduxForm = reduxForm({
+    form: 'loginForm'
+})(LoginForm);
 
 const mapStateToProps = (state) => {
     const {status,message,captchaUrl} = state.login;
@@ -38,11 +43,5 @@ const mapStateToProps = (state) => {
         captchaUrl
     }
 };
-
-// const mapDispatchToProps = (dispatch) => ({
-//     login(l,p,rm,c){
-//         dispatch(login(l,p,rm,c));
-//     }
-// });
 
 export default connect(mapStateToProps,{login})(Login);
