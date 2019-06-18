@@ -1,10 +1,11 @@
 import React from "react";
 
-const InputForm = (props) => {
+const InputForm = ({input,meta,...props}) => {
     return (
         <>
-            <input {...props} />
-            <span>Filed is required</span>
+            <input {...props} {...input}/>
+            {meta.touched && meta.invalid && <span>{meta.error}</span>}
+            {meta.touched && meta.warning && <span>{meta.warning}</span>}
         </>
     )
 };
