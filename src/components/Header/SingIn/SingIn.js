@@ -4,7 +4,6 @@ import styled from './SingIn.module.css'
 import defaultImg from '../../../assets/imgs/default_user.jpg';
 
 export const SingIn = ({isAuth,userInfo,logOut,message}) => {
-    debugger
 
     return (
         <div className={styled.login}>

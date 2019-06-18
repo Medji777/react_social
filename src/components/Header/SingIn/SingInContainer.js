@@ -1,23 +1,18 @@
 import React from 'react';
 import {connect} from "react-redux";
 import SingIn from "./SingIn";
-import {getUserInfoAuth,logOut} from './../../../DataBLL/authReducer';
+import {logOut} from './../../../DataBLL/authReducer';
 
-class SingInContainer extends React.Component{
+const SingInContainer = (props) => {
 
-    componentDidMount() {
-        this.props.getUserInfoAuth()
-    }
+    return (
+        <SingIn {...props}/>
+    )
 
-    render() {
-        return (
-            <SingIn {...this.props}/>
-        )
-    }
-}
+};
 
 const mapStateToProps = (state) => {
-    let {isAuth,userInfo,message} = state.auth;
+    let {isAuth, userInfo, message} = state.auth;
     return {
         isAuth,
         userInfo,
@@ -25,4 +20,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps,{getUserInfoAuth,logOut})(SingInContainer);
+export default connect(mapStateToProps,{logOut})(SingInContainer);
