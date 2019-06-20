@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 import styled from './Nav.module.css';
 import FriendsContainer from "./Friends/FriendsContainer";
 
-const Nav = ({})=>{
+const Nav = ()=>{
     return (
         <nav className={styled.nav}>
             <ul>
