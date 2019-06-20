@@ -12,7 +12,7 @@ const ContentInfo = ({profileInfo,userId,currentUserId}) => {
         )
     }
     // if(!userId && !currentUserId){
-    //     debugger
+    //
     //     return <Redirect to='/login'/>
     // }
 
@@ -23,10 +23,10 @@ const ContentInfo = ({profileInfo,userId,currentUserId}) => {
             return ['fab',`${icon}`];
         }
     };
-    debugger
+
     const {photos,fullName,aboutMe,contacts,lookingForAJob,lookingForAJobDescription} = profileInfo;
     const contactsArr = Object.keys(contacts).map(key => (
-        !contacts[key] ? '' : <a key={key} href={contacts[key]} target='_blank'><FontAwesomeIcon icon={trueUrl(key)} /></a>
+        contacts[key] && <a key={key} href={contacts[key]} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={trueUrl(key)} /></a>
     ));
 
     return (
