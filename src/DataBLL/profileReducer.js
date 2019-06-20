@@ -2,7 +2,7 @@ import ConstantType from "./ConstantType";
 import {setUserAvatarUrl} from './authReducer';
 import API from "../DAL/api";
 
-const {ADD_POST,UPDATE_NEW_POST_TEXT,SET_USER_INFO} = ConstantType;
+const {ADD_POST, UPDATE_NEW_POST_TEXT, SET_USER_INFO} = ConstantType;
 const initialState = {
     post: [
         {id: '1', src: 'https://www.abc.net.au/news/image/8314104-1x1-940x940.jpg', text: 'post 1'},
@@ -48,25 +48,21 @@ const profileReducer = (state = initialState, action) => {
     }
 };
 
-export const addPostActionCreator = () => ({type: ADD_POST});
-export const updateNewPostTextActionCreator = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
-export const setUserInfo = (profileInfo) => ({type:SET_USER_INFO,profileInfo});
+export const addPost = () => ({type: ADD_POST});
+export const updateNewPostText = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
+export const setUserInfo = (profileInfo) => ({type: SET_USER_INFO, profileInfo});
 
-export const getUserProfileInfo = (id,currentAuthUserId,initialLoginUserId) => (dispatch) => {
-    debugger
-    API.getProfileInfo(id)
-        .then(res => {
-            if(res.data.hasOwnProperty('message')){
-
-            } else {
-                if((currentAuthUserId || initialLoginUserId) === res.data.userId){
+export const getUserProfileInfo = (userId, isAuthUser = false) => (dispatch) => {
+    if (userId) {
+        API.getProfileInfo(userId)
+            .then(res => {
+                if (isAuthUser) {
                     dispatch(setUserAvatarUrl(res.data.photos.small));
-                    dispatch(setUserInfo({...res.data}))
                 } else {
-                    dispatch(setUserInfo({...res.data}))
+                    dispatch(setUserInfo({...res.data}));
                 }
-            }
-        })
+            })
+    }
 };
 
-export default profileReducer
+export default profileReducer;
