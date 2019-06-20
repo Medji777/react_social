@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Content from './Content';
-import {setUserInfo,getUserProfileInfo} from '../../DataBLL/profileReducer';
+import {setUserInfo, getUserProfileInfo} from '../../DataBLL/profileReducer';
 import {getUserInfoAuth,setUserAvatarUrl} from "./../../DataBLL/authReducer";
 import {withRouter} from "react-router-dom";
 
@@ -20,15 +20,15 @@ class ContentContainer extends React.Component{
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        debugger
+
 
         if (this.props.match.params.userId !== prevProps.match.params.userId) {
-           this.props.getUserProfileInfo(this.getCurrentId,this.props.userId,this.props.initialId)
+           this.props.getUserProfileInfo(this.getCurrentId(),false)
         }
     }
 
     componentDidMount() {
-        this.props.getUserProfileInfo(this.getCurrentId,this.props.userId,this.props.initialId)
+        this.props.getUserProfileInfo(this.getCurrentId(),false)
     }
 
     componentWillUnmount() {
@@ -43,7 +43,6 @@ class ContentContainer extends React.Component{
 }
 
 const mapStateToProps = (state) => {
-        debugger;
         return {
             profileInfo: state.dataProfile.profileInfo,
             userId: state.auth.userInfo.userId,

@@ -3,7 +3,7 @@ import axios from './axios-instance';
 
 const API  = {
     getProfileInfo(id){
-        return axios.get(`profile/${id()}`)
+        return axios.get(`profile/${id}`)
     },
 
     follow(id){
