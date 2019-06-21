@@ -4,6 +4,11 @@
     list-style: none;
 }
 
+body {
+    margin-right: calc(-1 * (100vw - 100%));
+    overflow-x: hidden;
+}
+
 #root {
     background: #daefaa;
     min-height: calc(100vh);
