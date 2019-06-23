@@ -1,7 +1,8 @@
 import React from 'react';
-import styled from './Settings.module.css'
+import styled from './Settings.module.css';
+import {redirectAnonUsersHoc} from "../HOC/AnonUsersHOC";
 
-class Settings extends React.Component{
+class Settings extends React.Component {
     render() {
         return (
             <div className={styled.settings}>
@@ -11,4 +12,5 @@ class Settings extends React.Component{
     }
 }
 
-export default Settings
+export default redirectAnonUsersHoc(Settings);
+
