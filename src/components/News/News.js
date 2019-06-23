@@ -1,12 +1,8 @@
 import React from 'react';
 import styled from './News.module.css';
-import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom'
+import {redirectAnonUsersHoc} from "../HOC/AnonUsersHOC";
 
-const News = ({isAuth}) => {
-    if (!isAuth) {
-        return <Redirect to='/login'/>
-    }
+const News = () => {
     return (
         <div className={styled.news}>
             <h2>News</h2>
@@ -14,8 +10,4 @@ const News = ({isAuth}) => {
     )
 };
 
-const mapStateToProps = (state) => ({
-    isAuth: state.auth.isAuth
-});
-
-export default connect(mapStateToProps,{})(News)
+export default redirectAnonUsersHoc(News);
