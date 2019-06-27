@@ -30,7 +30,8 @@ export const Login = ({login,status,message,isAuth}) => {
 };
 
 const LoginReduxForm = reduxForm({
-    form: 'loginForm'
+    form: 'loginForm',
+
 })(LoginForm);
 
 const mapStateToProps = (state) => {

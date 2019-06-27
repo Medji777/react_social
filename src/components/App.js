@@ -11,13 +11,13 @@ import UsersContainer from "./Users/UsersContainer";
 import ContentContainer from "./Content/ContentContainer";
 import './../assets/fonts/fontsConfig';
 import Login from "./Login/Login";
-import {getUserInfoAuth} from './../DataBLL/authReducer';
+import {getUserInfoAuth,setIsActive} from './../DataBLL/authReducer';
 import {getUserProfileInfo} from './../DataBLL/profileReducer';
 import {connect} from "react-redux";
+import NotFound from "./NotPage/NotFound/NotFound";
+import NotAuthorized from "./NotPage/NotAuth/NotAuthorized";
+import EditProfileUser from "./Edit/EditProfileUser";
 import styled from './App.module.css';
-import NotFound from "./NotFound/NotFound";
-import NotAuthorized from "./NotFound/NotAuthorized";
-
 
 //Основной файл сборки приложения
 //Компонент App
@@ -48,9 +48,8 @@ class App extends React.Component {
             return false
         }
 
-        // To use a non-anonymous user
         // if(!isAuth) {
-        //     return  <Login />;
+        //     return <Login/>
         // }
 
         return (
@@ -59,17 +58,19 @@ class App extends React.Component {
                 <Nav/>
                 <div className={styled["app-wrapper-content"]}>
                     {/*Компонент роутинг-обертка, указывающий путь и ссылку до компонента приложения*/}
+
                         <Switch>
                             {!isAuth && <Route exact path={['/','/profile']} render={() => <Redirect to='/login'/>}/>}
                             <Route exact path='/' render={() => <Redirect to='/profile'/>}/>
                             <Route path='/dialogs' render={() => <DialogsContainer/>}/>
                             <Route exact path='/profile/:userId?' render={() => <ContentContainer/>}/>
-                            <Route exact path='/news' component={News}/>
-                            <Route exact path='/music' component={Music}/>
+                            <Route path='/news' component={News}/>
+                            <Route path='/music' component={Music}/>
                             <Route exact path='/users' render={() => <UsersContainer/>}/>
                             <Route exact path='/settings' component={Settings}/>
                             <Route exact path='/login' render={() => <Login/>}/>
                             <Route exact path='/not-auth' render={() => <NotAuthorized/>}/>
+                            <Route exact path='/edit' render={() => <EditProfileUser/>}/>
                             <Route render={() => <NotFound/>}/>
                         </Switch>
                 </div>
@@ -81,8 +82,10 @@ class App extends React.Component {
 const mapStateToProps = (state) => ({
     isChecked: state.auth.isChecked,
     isAuth: state.auth.isAuth,
+    isActive: state.auth.isActive,
     userId: state.auth.userInfo.userId,
-    initialId: state.login.currentId
+    initialId: state.login.currentId,
+    currentUserId: state.dataProfile.currentUserId
 });
 
-export default connect(mapStateToProps,{getUserInfoAuth,getUserProfileInfo})(App);
+export default connect(mapStateToProps,{getUserInfoAuth,getUserProfileInfo,setIsActive})(App);

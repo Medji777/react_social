@@ -2,11 +2,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 87vh;
 }
 
 .auth_page {
     display: flex;
     flex-direction: column;
     align-items: inherit;
+    background: rgb(120, 247, 244);
+    padding: 30px;
+    border-radius: 5%;
+}
+
+.form__login {
+    min-width: 250px;
+}
+
+.field__form_input, .field__form_checkbox {
+    display: flex;
+}
+
+.field__form_input {
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.field__form_input input {
+    border: 1px solid #b3b2b2;
+    padding: 4px;
+}
+
+.field__form_checkbox {
+    flex-direction: row;
 }
