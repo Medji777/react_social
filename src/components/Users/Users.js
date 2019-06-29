@@ -34,7 +34,7 @@ const Users = (props) => {
 
             {
                 users.length >= totalCount ? <p>Пользователи закончились</p> :
-                    isLoading ? <Loading /> : <button onClick={getUsersMore} className='button user_button'>Show more</button>
+                    isLoading ? <Loading wrap={{minHeight: '80vh'}} /> : <button onClick={getUsersMore} className='button user_button'>Show more</button>
             }
             <div style={{height: '30px'}}/>
         </div>
