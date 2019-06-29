@@ -3,7 +3,6 @@ import styled from './User.module.css';
 import {Link} from "react-router-dom";
 
 const User = ({img,id,name,status,city,country,btn,follow,unfollow,toggleDisable,isAuth}) => {
-    debugger;
     return (
         <div className={styled.user}>
             <div className={styled.user_avatar}>

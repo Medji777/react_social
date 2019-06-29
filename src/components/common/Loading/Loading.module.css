@@ -1,5 +1,8 @@
 .wrap_loading {
-    min-height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 .loading {

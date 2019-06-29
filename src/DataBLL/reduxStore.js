@@ -17,6 +17,7 @@ const reducers = combineReducers({
     auth: authReducer,
     form: formReducer
 });
+
 const store = createStore(reducers,applyMiddleware(thunk));
 
 window.store = store;

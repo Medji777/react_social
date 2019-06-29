@@ -2,9 +2,15 @@ import React from 'react';
 import Dialogs from "./Dialogs";
 import {sendMessageText, updateNewMessageText} from "../../DataBLL/dialogsReducer";
 import {connect} from "react-redux";
-import {redirectAnonUsersHoc} from "../HOC/AnonUsersHOC";
+//import {Redirect} from 'react-router-dom';
+import redirectAnonUsersHoc from "../HOC/AnonUsersHOC";
+import {compose} from "redux";
 
 const DialogsContainer = ({dataDialogs,sendMessageText,updateNewMessage}) => {
+
+    // if(!isAuth) {
+    //     return <Redirect to='/not-auth'/>
+    // }
 
     const sendMessage = (e) => {
         e.preventDefault();
@@ -28,4 +34,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps, {sendMessageText, updateNewMessageText})(redirectAnonUsersHoc(DialogsContainer));
+export default compose(connect(mapStateToProps, {sendMessageText, updateNewMessageText}),redirectAnonUsersHoc)(DialogsContainer);

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from './News.module.css';
-import {redirectAnonUsersHoc} from "../HOC/AnonUsersHOC";
+import redirectAnonUsersHoc from "../HOC/AnonUsersHOC";
 
 const News = () => {
     return (
