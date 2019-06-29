@@ -1,3 +1,73 @@
 .login {
     grid-area: b;
 }
+
+.login__info {
+    display: grid;
+    grid-template-areas: 'a b c';
+    grid-template-columns: 2fr 3fr 1.1fr;
+    grid-template-rows: 50px 1fr;
+    align-items: center;
+    justify-items: center;
+    grid-column-gap: 5px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.7);
+}
+
+.login__info:hover {
+    color: rgba(255,255,255,0.7);
+    background: rgba(113, 85, 61, 0.15);
+}
+
+.login__info.login__info__active {
+    color: rgba(255,255,255,1);
+    background: rgba(113, 85, 61, 0.5);
+}
+
+.login__info__name {
+    grid-area: b;
+    color: rgba(0,0,0,1);
+}
+
+.login__info.login__info__active .login__info__name {
+    color: rgba(255,255,255,1);
+}
+
+.login__info__img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(204, 204, 204, 0.6);
+    display: inline-block;
+}
+
+.login__info__arrow {
+    grid-area: c;
+}
+
+.login__menu {
+    position: absolute;
+    visibility: hidden;
+    width: 160px;
+    top: 58px;
+    right: 0;
+    background: #fff;
+    z-index: 800;
+    border: 1px solid #c5d0db;
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    opacity: 0;
+    transition: opacity 100ms linear, top 100ms linear, visibility 100ms linear;
+    pointer-events: none;
+}
+
+.login__menu.login__menu__active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.login__menu__logOut {
+    cursor: pointer;
+}
