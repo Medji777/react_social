@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from './Settings.module.css';
-import {redirectAnonUsersHoc} from "../HOC/AnonUsersHOC";
+import redirectAnonUsersHoc from "../HOC/AnonUsersHOC";
 
 class Settings extends React.Component {
     render() {
