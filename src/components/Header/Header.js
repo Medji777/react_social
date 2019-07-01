@@ -7,7 +7,7 @@ const Header = ()=>{
 
     return (
         <header className={styled.header}>
-            <img src={logo} alt="logo" className=""/>
+            <img src={logo} alt="logo" className={styled.header__logo}/>
             <SingInContainer />
         </header>
     )
