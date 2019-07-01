@@ -1,12 +1,16 @@
 .header {
+    position: relative;
     grid-area: h;
     background: #ccad78;
     display: grid;
     grid-template-areas: 'a b';
     grid-template-columns: 5fr 1fr;
 }
-.header img {
+
+.header__logo {
     width: 50px;
+}
+.header img {
     grid-area: a;
 }
 

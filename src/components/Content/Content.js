@@ -6,7 +6,7 @@ import styled from './Content.module.css';
 const Content = (props) => {
         return (
             <div className={styled.content}>
-                <ContentInfo profileInfo={props.profileInfo} userId={props.userId} currentUserId={props.match.params.userId}/>
+                <ContentInfo profileInfo={props.profileInfo} userId={props.userId} setIsEdit={props.setIsEdit} isEdit={props.isEdit} currentUserId={props.match.params.userId}/>
                 <MyPostConteiner />
             </div>
         )

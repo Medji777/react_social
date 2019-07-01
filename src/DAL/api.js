@@ -1,9 +1,29 @@
 import axios from './axios-instance';
 
-
 const API  = {
     getProfileInfo(id){
         return axios.get(`profile/${id}`)
+    },
+
+    setAuthProfileInfo(profile){
+        let {aboutMe,contacts,lookingForAJob,lookingForAJobDescription,fullName} = profile;
+        contacts = !contacts ? {} : contacts;
+        return axios.put('profile',{
+            aboutMe,
+            contacts: {
+                facebook: contacts.facebook,
+                github: contacts.github,
+                instagram: contacts.instagram,
+                mainLink: contacts.mainLink,
+                twitter: contacts.twitter,
+                vk: contacts.vk,
+                website: contacts.website,
+                youtube: contacts.youtube
+            },
+            lookingForAJob,
+            lookingForAJobDescription,
+            fullName
+        })
     },
 
     follow(id){
