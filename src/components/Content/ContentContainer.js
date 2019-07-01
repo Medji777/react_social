@@ -1,9 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Content from './Content';
-import {setUserInfo, getUserProfileInfo} from '../../DataBLL/profileReducer';
-import {getUserInfoAuth,setUserAvatarUrl} from "./../../DataBLL/authReducer";
+import {setUserInfo, getUserProfileInfo,setIsEdit} from '../../DataBLL/profileReducer';
 import {withRouter} from "react-router-dom";
+import {compose} from "redux";
 
 class ContentContainer extends React.Component{
 
@@ -20,8 +20,6 @@ class ContentContainer extends React.Component{
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
-
         if (this.props.match.params.userId !== prevProps.match.params.userId) {
            this.props.getUserProfileInfo(this.getCurrentId(),false)
         }
@@ -46,10 +44,9 @@ const mapStateToProps = (state) => {
         return {
             profileInfo: state.dataProfile.profileInfo,
             userId: state.auth.userInfo.userId,
-            initialId: state.login.currentId
+            initialId: state.login.currentId,
+            isEdit: state.dataProfile.isEdit
         }
 };
 
-  let WithRouterComponentContainer =  withRouter(ContentContainer);
-
-export default connect(mapStateToProps,{setUserInfo,getUserInfoAuth,setUserAvatarUrl,getUserProfileInfo})(WithRouterComponentContainer);
+export default compose(connect(mapStateToProps,{setUserInfo,getUserProfileInfo,setIsEdit}),withRouter)(ContentContainer);
