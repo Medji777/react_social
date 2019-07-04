@@ -5,8 +5,9 @@ import store from './DataBLL/reduxStore';
 //import {Provider} from './StoreContext';
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from 'react-redux';
-import './index.css';
 import Loading from "./components/common/Loading/Loading";
+//import WrapperApp from "./components/common/WrapperApp";
+import './index.css';
 
 const App = lazy(()=>import ("./components/App"));
 
@@ -15,9 +16,11 @@ const App = lazy(()=>import ("./components/App"));
         <Provider store={store}>
             {/*Инициализирующий компонент, для создания роутинга в приложении*/}
             <BrowserRouter>
-                <Suspense fallback={<Loading wrap={{display: 'flex', alignItems: 'center', minHeight: '100vh'}}/>}>
-                    <App title="React_Social_Network"/>
-                </Suspense>
+                {/*<WrapperApp>*/}
+                    <Suspense fallback={<Loading wrap={{display: 'flex', alignItems: 'center', minHeight: '100vh'}}/>}>
+                        <App title="React_Social_Network"/>
+                    </Suspense>
+                {/*</WrapperApp>*/}
             </BrowserRouter>
         </Provider>
         ,document.querySelector('#root'));

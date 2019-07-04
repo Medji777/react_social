@@ -2,11 +2,12 @@ import ConstantType from "./ConstantType";
 import API from "../DAL/api";
 import {setUserId} from "./loginReducer";
 
-const {SET_IS_AUTH,SET_USER_INFO_AUTH,SET_USER_AVATAR_URL,SET_MESSAGE_ERROR_AUTH,CHECK_COMPLETED} = ConstantType;
+const {SET_IS_AUTH,SET_IS_ACTIVE,SET_USER_INFO_AUTH,SET_USER_AVATAR_URL,SET_MESSAGE_ERROR_AUTH,CHECK_COMPLETED} = ConstantType;
 
 let initialState = {
     isChecked: false,
     isAuth: false,
+    isActive: false,
     userInfo: {
         userId: null,
         userName: null,
@@ -21,7 +22,6 @@ const authReducer = (state = initialState,action) => {
             return {
                 ...state,
                 isAuth: action.value,
-                //isChecked: true
             }
         }
         case CHECK_COMPLETED:{
@@ -33,7 +33,7 @@ const authReducer = (state = initialState,action) => {
                 userInfo: {
                     ...state.userInfo,
                     userId: action.userId,
-                    userName: action.userName
+                    // userName: action.userName
                 }
             }
         }
@@ -42,7 +42,8 @@ const authReducer = (state = initialState,action) => {
                 ...state,
                 userInfo: {
                     ...state.userInfo,
-                    userAvatarUrl: action.avatarUrl
+                    userAvatarUrl: action.avatarUrl,
+                    userName: action.userName
                 }
             }
         }
@@ -52,6 +53,12 @@ const authReducer = (state = initialState,action) => {
                 message: action.message
             }
         }
+        case SET_IS_ACTIVE: {
+            return {
+                ...state,
+                isActive: action.flag
+            }
+        }
         default: {
             return state
         }
@@ -59,16 +66,17 @@ const authReducer = (state = initialState,action) => {
 };
 
 export const setIsAuth = (value) => ({type: SET_IS_AUTH, value});
-export const setUserInfoAuth = (userId,userName) => ({type:SET_USER_INFO_AUTH,userId,userName});
+export const setIsActive = (flag) => ({type: SET_IS_ACTIVE,flag});
+export const setUserInfoAuth = (userId) => ({type:SET_USER_INFO_AUTH,userId});
 export const setMessageErrorAuth = (message) => ({type:SET_MESSAGE_ERROR_AUTH,message});
-export const setUserAvatarUrl = (avatarUrl) => ({type:SET_USER_AVATAR_URL,avatarUrl});
+export const setUserAvatarAndName = (avatarUrl,userName) => ({type:SET_USER_AVATAR_URL,avatarUrl,userName});
 export const checkCompleted = () => ({type:CHECK_COMPLETED});
 
 export const getUserInfoAuth = () => (dispatch) => {
     API.getUserInfoAuth()
         .then((res) => {
             if(res.data.resultCode === 0){
-                dispatch(setUserInfoAuth(res.data.data.id,res.data.data.login));
+                dispatch(setUserInfoAuth(res.data.data.id));
                 dispatch(setIsAuth(true));
                 dispatch(setMessageErrorAuth(''));
             } else {
@@ -77,13 +85,14 @@ export const getUserInfoAuth = () => (dispatch) => {
             dispatch(checkCompleted());
         })
         .catch(e => console.log(e.message))
+
 };
 
 export const logOut = () => (dispatch) => {
     API.logOut()
         .then((res) => {
             if(res.data.resultCode === 0){
-                dispatch(setUserInfoAuth(null,null));
+                dispatch(setUserInfoAuth(null));
                 dispatch(setUserId(null));
                 dispatch(setIsAuth(false));
             } else {
