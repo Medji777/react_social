@@ -1,6 +1,7 @@
 import ConstantType from "./ConstantType";
 import API from "../DAL/api";
 import {setUserId} from "./loginReducer";
+import {getUserProfileInfo} from "./profileReducer";
 
 const {SET_IS_AUTH,SET_IS_ACTIVE,SET_USER_INFO_AUTH,SET_USER_AVATAR_URL,SET_MESSAGE_ERROR_AUTH,CHECK_COMPLETED} = ConstantType;
 
@@ -22,6 +23,7 @@ const authReducer = (state = initialState,action) => {
             return {
                 ...state,
                 isAuth: action.value,
+                //isChecked: true
             }
         }
         case CHECK_COMPLETED:{
@@ -78,6 +80,7 @@ export const getUserInfoAuth = () => (dispatch) => {
             if(res.data.resultCode === 0){
                 dispatch(setUserInfoAuth(res.data.data.id));
                 dispatch(setIsAuth(true));
+                dispatch(getUserProfileInfo(res.data.data.id,true));
                 dispatch(setMessageErrorAuth(''));
             } else {
                 dispatch(setMessageErrorAuth(res.data.messages[0]));

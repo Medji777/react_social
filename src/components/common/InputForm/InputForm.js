@@ -10,7 +10,7 @@ const InputForm = ({input,meta,...props}) => {
             } else if(meta.warning){
                 return 'orange'
             }
-            return 'transparent'
+            return '#00000045'
         }
     };
 
