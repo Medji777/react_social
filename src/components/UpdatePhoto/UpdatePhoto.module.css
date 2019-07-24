@@ -1,0 +1,28 @@
+.update {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+}
+
+.update__input {
+    display: flex;
+    justify-content: center;
+}
+
+.update label {
+    background: #fff;
+    padding: 2px;
+    border: 1px solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.update label:hover {
+    border: 1px solid #ccc;
+}
+
+.update input {
+    visibility: hidden;
+    position: absolute;
+}

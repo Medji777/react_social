@@ -18,6 +18,7 @@ import NotFound from "./NotPage/NotFound/NotFound";
 import NotAuthorized from "./NotPage/NotAuth/NotAuthorized";
 import EditProfileUser from "./Edit/EditProfileUser";
 import styled from './App.module.css';
+import UpdatePhoto from "./UpdatePhoto/UpdatePhoto";
 
 //Основной файл сборки приложения
 //Компонент App
@@ -71,6 +72,7 @@ class App extends React.Component {
                             <Route exact path='/login' render={() => <Login/>}/>
                             <Route exact path='/not-auth' render={() => <NotAuthorized/>}/>
                             <Route exact path='/edit' render={() => <EditProfileUser/>}/>
+                            <Route path='/update' render={() => <UpdatePhoto/>}/>
                             <Route render={() => <NotFound/>}/>
                         </Switch>
                 </div>

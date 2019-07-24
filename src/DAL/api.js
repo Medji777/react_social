@@ -1,4 +1,5 @@
-import axios from './axios-instance';
+import {axios,axiosFile} from './axios-instance';
+import {captcha} from "../DataBLL/loginReducer";
 
 const API  = {
     getProfileInfo(id){
@@ -38,12 +39,17 @@ const API  = {
         return axios.get('auth/me')
     },
 
-    logIn(email,password,rememberMe){
+    logIn(email,password,rememberMe,captcha){
       return axios.post('auth/login',{
           email,
           password,
-          rememberMe
+          rememberMe,
+          captcha
       })
+    },
+
+    captcha(){
+        return axios.get('security/get-captcha-url')
     },
 
     logOut(){
@@ -56,7 +62,24 @@ const API  = {
 
     getSearchUsers(str,count){
         return axios.get(`users?term=${str}&count=${count}`)
+    },
+
+    setUpdatePhoto(img){
+      return axiosFile.post('profile/photo', img)
+    },
+    getStatusUser(userId){
+      return axios.get(`profile/status/${userId}`)
+    },
+    setUpdateStatus(status){
+        return axios.put('profile/status', {status})
+    },
+    getDialogs(){
+        return axios.get('dialogs')
+    },
+    setStartDialog(userId){
+        return axios.put(`dialogs/${userId}`)
     }
+
 };
 
 export default API;
