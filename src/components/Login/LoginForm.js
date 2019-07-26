@@ -23,14 +23,20 @@ const validateOnPassword = (value) => {
 };
 
 const validateOnNormPassword = (value) => {
-    debugger
     if(value && value.length < 5){
         return 'Password not norm'
     }
     return undefined;
 };
 
-const LoginForm = ({errorMessageBlock,getInputValue,statuses,status,handleSubmit}) => {
+const validateOnCaptcha = (value) => {
+    if(!(/[a-z0-9]/i.test(value))){
+        return 'Only latin symbols'
+    }
+
+};
+
+const LoginForm = ({errorMessageBlock,getInputValue,statuses,status,handleSubmit,captchaUrl}) => {
 
     return (
         <form onSubmit={handleSubmit} className={styled.form__login}>
@@ -46,6 +52,12 @@ const LoginForm = ({errorMessageBlock,getInputValue,statuses,status,handleSubmit
                 <label htmlFor='RememberMe'>Remember Me</label>
                 <Field component={InputForm} id={'RememberMe'} type={'checkbox'} name={'checkbox'}/>
             </div>
+            {
+                !!captchaUrl && <div className={styled.field__form_captcha}>
+                    <img src={captchaUrl} alt='captcha'/>
+                    <Field component={InputForm} id={'captcha'} type={'text'} name={'captcha'} placeholder={'Введите captcha'} validate={[validateOnSert,validateOnCaptcha]}/>
+                </div>
+            }
             <button type='submit' disabled={status === statuses.INPROGRESS}>LogIn</button>
             {errorMessageBlock}
         </form>

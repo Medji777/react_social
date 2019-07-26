@@ -35,3 +35,8 @@
 .field__form_checkbox {
     flex-direction: row;
 }
+
+.field__form_captcha img {
+    max-width: 40%;
+    max-height: 2.5rem;
+}

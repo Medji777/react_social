@@ -6,14 +6,14 @@ import LoginForm from "./LoginForm";
 import {reduxForm} from "redux-form";
 import styled from './Login.module.css';
 
-export const Login = ({login,status,message,isAuth}) => {
+export const Login = ({login,status,message,isAuth,captchaUrl}) => {
 
     if(isAuth) {
         return <Redirect to='/profile'/>
     }
 
     const getInputValue = (value) => {
-        login && login(value.text,value.password,value.checkbox);
+        login && login(value.text,value.password,value.checkbox,value.captcha);
     };
 
     let errorMessageBlock = status === statuses.ERROR && <div className="error">{message}</div>;
@@ -22,7 +22,7 @@ export const Login = ({login,status,message,isAuth}) => {
         <div className={styled.auth}>
             <div className={styled.auth_page}>
                 <h2>Authorization</h2>
-                <LoginReduxForm onSubmit={getInputValue} errorMessageBlock={errorMessageBlock} statuses={statuses} status={status}/>
+                <LoginReduxForm onSubmit={getInputValue} errorMessageBlock={errorMessageBlock} statuses={statuses} status={status} captchaUrl={captchaUrl}/>
             </div>
         </div>
     );
