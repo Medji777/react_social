@@ -12,7 +12,7 @@
 
 .content .pp__img_wrap {
     position: relative;
-    height: 124px;
+    height: 145px;
 }
 
 .content .pp__img_wrap_bottom {
@@ -34,13 +34,17 @@
     visibility: visible;
     opacity: 1;
     top: 70%;
-    color: rgba(255,255,255,1);
     cursor: pointer;
 }
 
+.content .pp__img_wrap .pp__img_wrap_bottom div {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
+}
+
 .content .pp__i img {
-    width: 124px;
-    height: 124px;
+    width: 145px;
+    height: 145px;
     /*border-radius: 50%;*/
     background: rgba(204, 204, 204, 0.6);
     display: inline-block;
