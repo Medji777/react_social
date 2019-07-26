@@ -4,19 +4,21 @@ import styled from '../Content.module.css';
 import Loading from "../../common/Loading/Loading";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {NavLink} from "react-router-dom";
+import PopUp from "../../common/Popup/Popup";
+import UpdatePhoto from "../../UpdatePhoto/UpdatePhoto";
+import StatusUserContainer from "./StatusUser/StatusUserContainer";
+//import {Redirect} from 'react-router-dom';
 
-const ContentInfo = ({profileInfo,userId,currentUserId,isEdit,setIsEdit}) => {
+const ContentInfo = ({profileInfo,userId,currentUserId,isEdit,setIsEdit,openPopUp,closePopUp,isOpenPopUp}) => {
     if(!profileInfo){
         return (
             <Loading />
         )
     }
 
-    if(!!profileInfo && profileInfo.userId === userId){
-        setIsEdit(true);
-    } else {
-        setIsEdit(false);
-    }
+    const isEditProfileUser = !!profileInfo && profileInfo.userId === userId;
+
+    isEditProfileUser ? setIsEdit(true) : setIsEdit(false);
 
     const trueUrl = (icon) => {
         if(/website/.test(icon) || /mainLink/.test(icon)){
@@ -28,7 +30,7 @@ const ContentInfo = ({profileInfo,userId,currentUserId,isEdit,setIsEdit}) => {
 
     const {photos,fullName,aboutMe,contacts,lookingForAJob,lookingForAJobDescription} = profileInfo;
     const contactsArr = Object.keys(contacts).map(key => (
-        !contacts[key] ? && <a key={key} href={contacts[key]} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={trueUrl(key)} /></a>
+        !contacts[key] ? '' : <a key={key} href={contacts[key]} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={trueUrl(key)}/></a>
     ));
 
     return (
@@ -38,11 +40,21 @@ const ContentInfo = ({profileInfo,userId,currentUserId,isEdit,setIsEdit}) => {
             </div>
             <div className={styled.pp}>
                 <div className={styled.pp__i}>
-                    <div className={styled.pp__img_wrap}><img src={photos.large !== null ? photos.large : defaultImg} alt=""/><div className={styled.pp__img_wrap_bottom}><span>Изменить фото</span></div></div>
-                    {isEdit && <NavLink to='/edit'>edit</NavLink>}
+                    <div className={styled.pp__img_wrap}>
+                        <img src={photos.large !== null ? photos.large : defaultImg} alt=""/>
+                        {isEditProfileUser && <div className={styled.pp__img_wrap_bottom}>
+                            {/*<NavLink to='/update'>Изменить фото</NavLink>*/}
+                            <div onClick={openPopUp}>Изменить фото</div>
+                        </div>}
                     </div>
+                    <PopUp isOpen={isOpenPopUp} closePopUp={closePopUp}>
+                        <UpdatePhoto/>
+                    </PopUp>
+                    {isEdit && <NavLink to='/edit'>edit</NavLink>}
+                </div>
                 <div className={styled.pp__desc}>
                     <p className={styled.pp__desc_name}>{fullName}</p>
+                    <StatusUserContainer profileInfo={profileInfo} userId={userId}/>
                     <div>
                         <p>About me: </p>
                         <p>{aboutMe}</p>
@@ -60,7 +72,7 @@ const ContentInfo = ({profileInfo,userId,currentUserId,isEdit,setIsEdit}) => {
                     <div className={styled.pp__desc_contacts}>
                         <p>Contacts: </p>
                         <div className={styled.pp__desc_contacts_list}>
-                            { contactsArr }
+                            {contactsArr}
                         </div>
                     </div>
                 </div>
