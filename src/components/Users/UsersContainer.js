@@ -58,14 +58,34 @@ class UsersContainer extends React.Component {
         this.props.getUsersSearch(str,count) // GET - thunk - запрос поиска пользователя getUsersSearch в usersReducer
     };
 
+    getUsersMoreScroll = (e) => {
+        const {clientHeight,scrollTop,scrollHeight} = e.currentTarget.document.documentElement;
+        let scrollH = Math.max(scrollHeight); // высота блока с прокруткой
+        let loadHeight = clientHeight + (clientHeight/2); // линия подгрузки
+
+        if(scrollTop >= (scrollH - loadHeight)) {
+            this.getUsersMore();
+        }
+    };
+
+    removeUsersMoreScroll = () => {
+        window.removeEventListener('scroll',this.getUsersMoreScroll);
+    };
+
+    addUsersMoreScroll = () => {
+        window.addEventListener('scroll',this.getUsersMoreScroll);
+    };
+
     componentDidMount() {
         this.getStartUsers();
+        this.addUsersMoreScroll();
     }
 
     //В данном случе проверяем, изменился ли count. Если изменился, то выполняем запрос новой ранжировки пользователей
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.count !== prevProps.count) {
             this.getUpdateUsers();
+            this.addUsersMoreScroll();
         }
     }
 
@@ -73,6 +93,7 @@ class UsersContainer extends React.Component {
         const {updateUsers,resetSearchUsersName} = this.props;
         updateUsers(); // users: [] , currentPage: 1
         resetSearchUsersName();
+        this.removeUsersMoreScroll();
     }
 
     render() {
@@ -89,7 +110,8 @@ class UsersContainer extends React.Component {
                    toggleDisable={toggleDisable}
                    setUserName={this.setUserName}
                    setCount={this.setCount}
-                   getUsersMore={this.getUsersMore}
+                   // getUsersMore={this.getUsersMore}
+                   removeUsersMoreScroll={this.removeUsersMoreScroll}
             />
         )
     }
