@@ -6,11 +6,15 @@ import styled from './Users.module.css';
 import Loading from "../common/Loading/Loading";
 
 const Users = (props) => {
-    const {users,follow,unfollow, totalCount, isLoading,isLoadingSearch,toggleDisable, setUserName, setCount, getUsersMore,searchUsersInfo,isAuth} = props;
+    const {users, follow, unfollow, totalCount, isLoading, isLoadingSearch, toggleDisable, setUserName, setCount, removeUsersMoreScroll, searchUsersInfo, isAuth} = props;
+    const isLoadingUsers = !!totalCount && users.length >= totalCount;
+    if (isLoadingUsers) {
+        removeUsersMoreScroll();
+    }
     return (
         <div className={styled.users}>
             <h2>Users</h2>
-            <UsersSearch setUserName={setUserName} searchUsersInfo={searchUsersInfo} isLoading={isLoadingSearch} />
+            <UsersSearch setUserName={setUserName} searchUsersInfo={searchUsersInfo} isLoading={isLoadingSearch}/>
             <select onChange={setCount}>
                 {/*Рендеринг повторяющихся элементов или списка с помощью метода массивов map*/}
                 {[10, 20, 50, 100].map(num => (<option key={num} value={num}>{num}</option>))}
@@ -33,12 +37,12 @@ const Users = (props) => {
             }
 
             {
-                users.length >= totalCount ? <p>Пользователи закончились</p> :
-                    isLoading ? <Loading wrap={{minHeight: '80vh'}} /> : <button onClick={getUsersMore} className='button user_button'>Show more</button>
+                isLoadingUsers ? <p>Пользователи закончились</p> : isLoading && <Loading wrap={{minHeight: '80vh'}}/>
+                // :<button onClick={getUsersMore} className='button user_button'>Show more</button>
             }
             <div style={{height: '30px'}}/>
         </div>
     )
 };
 
-export default Users
+export default Users;
