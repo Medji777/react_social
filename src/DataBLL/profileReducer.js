@@ -2,7 +2,7 @@ import ConstantType from "./ConstantType";
 import {getUserInfoAuth, setUserAvatarAndName} from './authReducer';
 import API from "../DAL/api";
 
-const {ADD_POST,UPDATE_NEW_POST_TEXT,SET_USER_INFO,SET_CURRENT_USER_ID,SET_AUTH_USER_INFO,IS_EDIT,IS_LOAD_EDIT,SET_CHANGE_AUTH_PROFILE,SET_IS_OPEN_POPUP,SET_USER_STATUS} = ConstantType;
+const {ADD_POST,SET_USER_INFO,SET_AUTH_USER_INFO,IS_EDIT,IS_LOAD_EDIT,SET_CHANGE_AUTH_PROFILE,SET_IS_OPEN_POPUP,SET_USER_STATUS} = ConstantType;
 const initialState = {
     post: [
         {id: '1', src: 'https://www.abc.net.au/news/image/8314104-1x1-940x940.jpg', text: 'post 1'},
@@ -10,10 +10,8 @@ const initialState = {
         {id: '3', src: 'https://www.abc.net.au/news/image/8314104-1x1-940x940.jpg', text: 'post 3'},
         {id: '4', src: 'https://www.abc.net.au/news/image/8314104-1x1-940x940.jpg', text: 'post 4'}
     ],
-    newTextPost: '',
     profileInfo: null,
     userAuthProfileInfo: null,
-    currentUserId: null,
     isEdit: false,
     isLoadEdit: false,
     isOpenPopUp: false,
@@ -21,74 +19,25 @@ const initialState = {
 };
 
 const profileReducer = (state = initialState, action) => {
-    let stateCopy;
     switch (action.type) {
-        case ADD_POST:
-            stateCopy = {
-                ...state,
-                post: [...state.post]
-            };
+        case ADD_POST: {
             let count = state.post.length;
-            if (state.newTextPost.trim()) {
-                let newPost = {
-                    id: ++count, src: '#', text: state.newTextPost
-                };
-                stateCopy.post.push(newPost);
-                stateCopy.newTextPost = '';
-            }
-            return stateCopy;
-
-        case UPDATE_NEW_POST_TEXT:
-            return {
-                ...state,
-                newTextPost: action.newText
+            let newPost = {
+                id: ++count, src: '#', text: action.post
             };
-        case SET_USER_INFO: {
-            return {
-                ...state,
-                profileInfo: action.profileInfo
-            }
+            return {...state, post: [...state.post, newPost]};
         }
-        case SET_AUTH_USER_INFO: {
-            return {
-                ...state,
-                userAuthProfileInfo: action.userAuthProfileInfo
-            }
-        }
-        case SET_CURRENT_USER_ID: {
-            return {
-                ...state,
-                currentUserId: action.id
-            }
-        }
-        case IS_EDIT: {
-            return {
-                ...state,
-                isEdit: action.isEdit
-            }
-        }
-        case IS_LOAD_EDIT: {
-            return {
-                ...state,
-                isLoadEdit: action.isLoadEdit
-            }
-        }
+        case SET_USER_INFO:
+        case SET_AUTH_USER_INFO:
+        case IS_EDIT:
+        case IS_LOAD_EDIT:
+        case SET_IS_OPEN_POPUP:
+        case SET_USER_STATUS:
+            return {...state, ...action.payload};
         case SET_CHANGE_AUTH_PROFILE: {
             return {
                 ...state,
                 userAuthProfileInfo: {...state.userAuthProfileInfo,...action.profile}
-            }
-        }
-        case SET_IS_OPEN_POPUP: {
-            return {
-                ...state,
-                isOpenPopUp: action.flag
-            }
-        }
-        case SET_USER_STATUS: {
-            return {
-                ...state,
-                userStatus: action.status
             }
         }
         default:
@@ -96,78 +45,82 @@ const profileReducer = (state = initialState, action) => {
     }
 };
 
-export const addPost = () => ({type: ADD_POST});
-export const updateNewPostText = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
-export const setUserInfo = (profileInfo) => ({type:SET_USER_INFO,profileInfo});
-export const setAuthUserInfo = (userAuthProfileInfo) => ({type:SET_AUTH_USER_INFO,userAuthProfileInfo});
-//export const setCurrentUserId = (id) => ({type: SET_CURRENT_USER_ID,id});
-export const setIsEdit = (isEdit) => ({type: IS_EDIT, isEdit});
-export const setIsLoadEdit = (isLoadEdit) => ({type: IS_LOAD_EDIT,isLoadEdit});
+export const addPost = (post) => ({type: ADD_POST,post});
+export const setUserInfo = (profileInfo) => ({type:SET_USER_INFO,payload: {profileInfo}});
+export const setAuthUserInfo = (userAuthProfileInfo) => ({type:SET_AUTH_USER_INFO,payload: {userAuthProfileInfo}});
+export const setIsEdit = (isEdit) => ({type: IS_EDIT, payload: {isEdit}});
+export const setIsLoadEdit = (isLoadEdit) => ({type: IS_LOAD_EDIT,payload: {isLoadEdit}});
 export const setChangeAuthProfile = (profile) => ({type: SET_CHANGE_AUTH_PROFILE,profile});
-export const setIsOpenPopUp = (flag) => ({type: SET_IS_OPEN_POPUP,flag});
-export const setUserStatus = (status) => ({type: SET_USER_STATUS,status});
+export const setIsOpenPopUp = (isOpenPopUp) => ({type: SET_IS_OPEN_POPUP,payload: {isOpenPopUp}});
+export const setUserStatus = (userStatus) => ({type: SET_USER_STATUS,payload: {userStatus}});
 
-export const getUserProfileInfo = (userId, isAuthUser = false) => (dispatch) => {
-    debugger;
-    if(userId){
-        API.getProfileInfo(userId)
-            .then(res => {
-                if (isAuthUser) {
-                    dispatch(setUserAvatarAndName(res.data.photos.small,res.data.fullName));
-                    dispatch(setAuthUserInfo({...res.data}));
-                } else {
-                    dispatch(setUserInfo({...res.data}));
-                }
-            })
+export const getUserProfileInfo = (userId, isAuthUser = false) => async (dispatch) => {
+    if (userId) {
+        let res = await API.getProfileInfo(userId);
+        try{
+           if (isAuthUser) {
+               dispatch(setUserAvatarAndName(res.data.photos.small, res.data.fullName));
+               dispatch(setAuthUserInfo({...res.data}));
+           } else {
+               dispatch(setUserInfo({...res.data}));
+           }
+        }
+        catch (e) {
+            console.log(e.message)
+        }
     }
 };
 
-export const setAuthUserProfile = (userAuthProfileInfo) => (dispatch) => {
-    debugger;
+export const setAuthUserProfile = (userAuthProfileInfo) => async (dispatch) => {
     dispatch(setIsLoadEdit(true));
-    API.setAuthProfileInfo(userAuthProfileInfo)
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setAuthUserInfo({...userAuthProfileInfo}));
-                dispatch(setIsLoadEdit(false));
-            }
-        })
+    let res = await API.setAuthProfileInfo(userAuthProfileInfo);
+    try{
+        if (res.data.resultCode === 0) {
+            dispatch(setAuthUserInfo({...userAuthProfileInfo}));
+            dispatch(setIsLoadEdit(false));
+        }
+    }
+    catch (e) {
+        console.log(e.message)
+    }
 };
 
-export const setUpdatePhoto = (img,userId) => (dispatch) => {
-    debugger
-   //if(img){
-       API.setUpdatePhoto(img)
-           .then(res => {
-               if(res.data.resultCode === 0){
-                    dispatch(getUserProfileInfo(userId));
-                    dispatch(getUserInfoAuth());
-               }
-           })
-   //}
+export const setUpdatePhoto = (img,userId) => async (dispatch) => {
+    let res = await API.setUpdatePhoto(img);
+    try {
+        if (res.data.resultCode === 0) {
+            dispatch(getUserProfileInfo(userId));
+            dispatch(getUserInfoAuth());
+        }
+    }
+    catch (e) {
+        console.log(e.message)
+    }
 };
-
- //async await по дефолту возвращает promise
 
 export const getStatusUser = (userId) => async (dispatch) => {
-    debugger
     let res = await API.getStatusUser(userId);
-
-    if (res.status === 200) {
-        dispatch(setUserStatus(res.data));
+    try {
+        if (res.status === 200) {
+            dispatch(setUserStatus(res.data));
+        }
     }
-
+    catch (e) {
+        console.log(e.message)
+    }
 };
 
 export const setUpdateStatus = (status) => async (dispatch) => {
-    debugger
     let res = await API.setUpdateStatus(status);
-
-    if (res.data.resultCode === 0) {
-        dispatch(setUserStatus(status));
-        // dispatch(getUserInfoAuth());
+    try {
+        if (res.data.resultCode === 0) {
+            dispatch(setUserStatus(status));
+            // dispatch(getUserInfoAuth());
+        }
     }
-
+    catch (e) {
+        console.log(e.message)
+    }
 };
 
 export default profileReducer;
