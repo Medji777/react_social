@@ -6,7 +6,7 @@ import {getUserProfileInfo} from "./profileReducer";
 const {SET_IS_AUTH,SET_IS_ACTIVE,SET_USER_INFO_AUTH,SET_USER_AVATAR_URL,SET_MESSAGE_ERROR_AUTH,CHECK_COMPLETED} = ConstantType;
 
 let initialState = {
-    isChecked: false,
+    isInitialized: false,
     isAuth: false,
     isActive: false,
     userInfo: {
@@ -19,46 +19,19 @@ let initialState = {
 
 const authReducer = (state = initialState,action) => {
     switch (action.type) {
-        case SET_IS_AUTH: {
-            return {
-                ...state,
-                isAuth: action.value,
-                //isChecked: true
-            }
-        }
-        case CHECK_COMPLETED:{
-            return {...state, isChecked: true}
-        }
-        case SET_USER_INFO_AUTH: {
-            return {
-                ...state,
-                userInfo: {
-                    ...state.userInfo,
-                    userId: action.userId,
-                    // userName: action.userName
-                }
-            }
-        }
+        case SET_IS_AUTH:
+        case CHECK_COMPLETED:
+        case SET_MESSAGE_ERROR_AUTH:
+        case SET_IS_ACTIVE:
+            return {...state, ...action.payload};
+
+        case SET_USER_INFO_AUTH:
         case SET_USER_AVATAR_URL: {
             return {
                 ...state,
                 userInfo: {
-                    ...state.userInfo,
-                    userAvatarUrl: action.avatarUrl,
-                    userName: action.userName
+                    ...state.userInfo, ...action.payload
                 }
-            }
-        }
-        case SET_MESSAGE_ERROR_AUTH: {
-            return {
-                ...state,
-                message: action.message
-            }
-        }
-        case SET_IS_ACTIVE: {
-            return {
-                ...state,
-                isActive: action.flag
             }
         }
         default: {
@@ -67,43 +40,44 @@ const authReducer = (state = initialState,action) => {
     }
 };
 
-export const setIsAuth = (value) => ({type: SET_IS_AUTH, value});
-export const setIsActive = (flag) => ({type: SET_IS_ACTIVE,flag});
-export const setUserInfoAuth = (userId) => ({type:SET_USER_INFO_AUTH,userId});
-export const setMessageErrorAuth = (message) => ({type:SET_MESSAGE_ERROR_AUTH,message});
-export const setUserAvatarAndName = (avatarUrl,userName) => ({type:SET_USER_AVATAR_URL,avatarUrl,userName});
-export const checkCompleted = () => ({type:CHECK_COMPLETED});
+export const setIsAuth = (isAuth) => ({type: SET_IS_AUTH, payload: {isAuth}});
+export const setIsActive = (isActive) => ({type: SET_IS_ACTIVE,payload: {isActive}});
+export const setUserInfoAuth = (userId) => ({type:SET_USER_INFO_AUTH,payload:{userId}});
+export const setMessageErrorAuth = (message) => ({type:SET_MESSAGE_ERROR_AUTH,payload: {message}});
+export const setUserAvatarAndName = (userAvatarUrl,userName) => ({type:SET_USER_AVATAR_URL,payload:{userAvatarUrl,userName}});
+export const checkInitialized = (isInitialized = true) => ({type:CHECK_COMPLETED, payload: {isInitialized}});
 
-export const getUserInfoAuth = () => (dispatch) => {
-    API.getUserInfoAuth()
-        .then((res) => {
-            if(res.data.resultCode === 0){
+export const getUserInfoAuth = () => async (dispatch) => {
+     let res = await API.getUserInfoAuth();
+        try {
+            if (res.data.resultCode === 0) {
                 dispatch(setUserInfoAuth(res.data.data.id));
                 dispatch(setIsAuth(true));
-                dispatch(getUserProfileInfo(res.data.data.id,true));
+                dispatch(getUserProfileInfo(res.data.data.id, true));
                 dispatch(setMessageErrorAuth(''));
             } else {
                 dispatch(setMessageErrorAuth(res.data.messages[0]));
             }
-            dispatch(checkCompleted());
-        })
-        .catch(e => console.log(e.message))
-
+            dispatch(checkInitialized());
+        }
+        catch(e){
+            console.log(e.message);
+        }
 };
 
-export const logOut = () => (dispatch) => {
-    API.logOut()
-        .then((res) => {
-            if(res.data.resultCode === 0){
+export const logOut = () => async (dispatch) => {
+    let res = await API.logOut();
+        try {
+            if (res.data.resultCode === 0) {
                 dispatch(setUserInfoAuth(null));
                 dispatch(setUserId(null));
+                dispatch(setUserAvatarAndName('',null));
                 dispatch(setIsAuth(false));
-            } else {
-                //dispatch();
             }
-
-        })
-        .catch(e => console.log(e.message))
+        }
+        catch(e){
+            console.log(e.message)
+        }
 };
 
 export default authReducer;

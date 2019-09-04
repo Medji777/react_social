@@ -20,53 +20,34 @@ const initialState = {
     }
 };
 
+const followToggle = (state,action,followed) => {
+    return {
+        ...state,
+        users: state.users.map(u => {
+            return (u.id === action.userId) ? {...u, followed} : u
+        })
+    };
+};
+
 const usersReducer = (state = initialState, action) => {
     switch (action.type) {
         case FOLLOW:
-            return {
-                ...state,
-                users: state.users.map(u => {
-                    return (u.id === action.userId) ? {...u, followed: true} : u
-                })
-            };
+            return followToggle (state,action,true);
         case UNFOLLOW:
-            return {
-                ...state,
-                users: state.users.map(u => {
-                    return (u.id === action.userId) ? {...u, followed: false} : u
-                })
-            };
+            return followToggle (state,action,false);
         case SET_USERS: {
             return {
                 ...state,
                 users: [...state.users, ...action.users]
             }
         }
-        case SET_CURRENT_PAGE: {
-            return {
-                ...state,
-                currentPage: action.currentPage
-            }
-        }
-        case SET_TOTAL_COUNT: {
-            return {
-                ...state,
-                totalCount: action.totalCount
-            }
-        }
-        case SET_COUNT_USERS: {
-            return {
-                ...state,
-                count: action.count
-            }
-        }
-        case UPDATE_USERS: {
-            return {
-                ...state,
-                users: [],
-                currentPage: 1
-            }
-        }
+        case SET_CURRENT_PAGE:
+        case SET_TOTAL_COUNT:
+        case SET_COUNT_USERS:
+        case UPDATE_USERS:
+        case IS_LOADING:
+        case IS_LOADING_SEARCH:
+            return {...state, ...action.payload};
         case SET_SEARCH_USERS: {
             return {
                 ...state,
@@ -76,35 +57,13 @@ const usersReducer = (state = initialState, action) => {
                 }
             }
         }
-        case SET_SEARCH_USERS_NAME: {
-            return {
-                ...state,
-                searchUsers: {
-                    ...state.searchUsers,
-                    name: action.name
-                }
-            }
-        }
+        case SET_SEARCH_USERS_NAME:
         case RESET_SEARCH_USERS_NAME: {
             return {
                 ...state,
                 searchUsers: {
-                    ...state.searchUsers,
-                    name: '',
-                    users: []
+                    ...state.searchUsers, ...action.payload
                 }
-            }
-        }
-        case IS_LOADING: {
-            return {
-                ...state,
-                isLoading: action.flag
-            }
-        }
-        case IS_LOADING_SEARCH: {
-            return {
-                ...state,
-                isLoadingSearch: action.flag
             }
         }
         case DISABLE: {
@@ -121,63 +80,63 @@ const usersReducer = (state = initialState, action) => {
 export const setFollow = (userId) => ({type: FOLLOW, userId});
 export const setUnfollow = (userId) => ({type: UNFOLLOW, userId});
 export const setUsers = (users) => ({type: SET_USERS, users});
-export const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage});
-export const setTotalCount = (totalCount) => ({type: SET_TOTAL_COUNT, totalCount});
-export const setCountUsers = (count) => ({type: SET_COUNT_USERS, count});
-export const setSearchUsersName = (name) => ({type: SET_SEARCH_USERS_NAME, name});
+export const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, payload: {currentPage}});
+export const setTotalCount = (totalCount) => ({type: SET_TOTAL_COUNT, payload: {totalCount}});
+export const setCountUsers = (count) => ({type: SET_COUNT_USERS, payload: {count}});
+export const setSearchUsersName = (name) => ({type: SET_SEARCH_USERS_NAME, payload:{name}});
 export const setSearchUsers = (users) => ({type: SET_SEARCH_USERS, users});
-export const resetSearchUsersName = () => ({type: RESET_SEARCH_USERS_NAME});
-export const updateUsers = () => ({type: UPDATE_USERS});
-export const isLoading = (flag) => ({type: IS_LOADING,flag});
-export const isLoadingSearch = (flag) => ({type: IS_LOADING_SEARCH,flag});
+export const resetSearchUsersName = () => ({type: RESET_SEARCH_USERS_NAME,payload:{name: '', users: []}});
+export const updateUsers = () => ({type: UPDATE_USERS,payload:{users: [], currentPage: 1}});
+export const isLoading = (isLoading) => ({type: IS_LOADING,payload: {isLoading}});
+export const isLoadingSearch = (isLoadingSearch) => ({type: IS_LOADING_SEARCH,payload: {isLoadingSearch}});
 export const isDisable = (id,flag) => ({type: DISABLE,id,flag});
 
-export const follow = (id) => (dispatch) => {
+const followUnfollowFlow = async (dispatch,id,apiMethod,AC) => {
     dispatch(isDisable(id,true));
-    API.follow(id)
-        .then(res => {
-            if(res.data.resultCode === 0){
-                dispatch(setFollow(id));
-                dispatch(isDisable(id,false))
-            }
-        })
-        .catch(e => console.log(e.message))
+    let res = await apiMethod(id);
+    try{
+        if(res.data.resultCode === 0){
+            dispatch(AC(id));
+            dispatch(isDisable(id,false))
+        }
+    }
+    catch (e) {
+        console.log(e.message)
+    }
+};
+
+export const follow = (id) => (dispatch) => {
+    followUnfollowFlow(dispatch,id,API.follow.bind(API),setFollow);
 };
 
 export const unfollow = (id) => (dispatch) => {
-    dispatch(isDisable(id,true));
-    API.unfollow(id)
-        .then(res => {
-            if(res.data.resultCode === 0){
-                dispatch(setUnfollow(id));
-                dispatch(isDisable(id,false))
-            }
-        })
-        .catch(e => console.log(e.message))
+    followUnfollowFlow(dispatch,id,API.unfollow.bind(API),setUnfollow);
 };
 
-export const getUsers = (page,count) => (dispatch) => {
+export const getUsers = (page,count) => async (dispatch) => {
     dispatch(isLoading(true));
-    API.getUsers(page,count)
-        .then(res => {
-            dispatch(setUsers([...res.data.items]));
-            dispatch(setTotalCount(res.data.totalCount));
-            dispatch(isLoading(false));
-        })
-        .catch(e => console.log(e.message))
+    let res = await API.getUsers(page,count);
+    try {
+        dispatch(setUsers([...res.data.items]));
+        dispatch(setTotalCount(res.data.totalCount));
+        dispatch(isLoading(false));
+    }
+    catch (e) {
+        console.log(e.message)
+    }
 };
 
-export const getUsersSearch = (str,count) => (dispatch) => {
+export const getUsersSearch = (str,count) => async (dispatch) => {
     dispatch(isLoadingSearch(true));
     dispatch(setSearchUsersName(str));
-    API.getSearchUsers(str,count)
-        .then(res => {
-            dispatch(setSearchUsers(res.data.items));
-            dispatch(isLoadingSearch(false));
-        })
-        .catch(e => console.log(e.message))
+    let res = await API.getSearchUsers(str,count);
+    try {
+        dispatch(setSearchUsers(res.data.items));
+        dispatch(isLoadingSearch(false));
+    }
+    catch (e) {
+        console.log(e.message)
+    }
 };
-
-//const sryui = (s = initialState,action,c = {}) => ({...s, task: s.task.map((e)=>{e.id === action.id ? ({...e, ...c}) : (e)})});
 
 export default usersReducer;
