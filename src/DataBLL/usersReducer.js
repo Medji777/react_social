@@ -91,32 +91,26 @@ export const isLoading = (isLoading) => ({type: IS_LOADING,payload: {isLoading}}
 export const isLoadingSearch = (isLoadingSearch) => ({type: IS_LOADING_SEARCH,payload: {isLoadingSearch}});
 export const isDisable = (id,flag) => ({type: DISABLE,id,flag});
 
-export const follow = (id) => async (dispatch) => {
+const followUnfollowFlow = async (dispatch,id,apiMethod,AC) => {
     dispatch(isDisable(id,true));
-    let res = await API.follow(id);
+    let res = await apiMethod(id);
     try{
         if(res.data.resultCode === 0){
-            dispatch(setFollow(id));
-            dispatch(isDisable(id,false))
-        }
-    }
-    catch (e) {
-         console.log(e.message)
-    }
-};
-
-export const unfollow = (id) => async (dispatch) => {
-    dispatch(isDisable(id,true));
-    let res = await API.unfollow(id);
-    try {
-        if(res.data.resultCode === 0){
-            dispatch(setUnfollow(id));
+            dispatch(AC(id));
             dispatch(isDisable(id,false))
         }
     }
     catch (e) {
         console.log(e.message)
     }
+};
+
+export const follow = (id) => (dispatch) => {
+    followUnfollowFlow(dispatch,id,API.follow.bind(API),setFollow);
+};
+
+export const unfollow = (id) => (dispatch) => {
+    followUnfollowFlow(dispatch,id,API.unfollow.bind(API),setUnfollow);
 };
 
 export const getUsers = (page,count) => async (dispatch) => {
