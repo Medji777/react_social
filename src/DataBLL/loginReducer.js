@@ -40,8 +40,8 @@ export const getCaptcha = (captcha) => ({type: GET_CAPTCHA, payload: {captcha}})
 
 export const login = (email, password, rememberMe, captchaUrl) => async (dispatch) => {
     dispatch(setStatus(statuses.INPROGRESS));
-    let res = await API.logIn(email, password, rememberMe,captchaUrl);
     try{
+        let res = await API.logIn(email, password, rememberMe,captchaUrl);
         if (res.data.resultCode === 0) {
             dispatch(setStatus(statuses.SUCCESS));
             dispatch(setUserId(res.data.data.userId));
@@ -63,8 +63,8 @@ export const login = (email, password, rememberMe, captchaUrl) => async (dispatc
 };
 
 export const captcha = () => async (dispatch) => {
-    let res = await API.captcha();
     try {
+        let res = await API.captcha();
         dispatch(getCaptcha(res.data.url));
     }
     catch (e) {

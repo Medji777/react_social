@@ -111,8 +111,8 @@ export const setDeleteMessage = (messageDelete = true) => ({type: DELETE_MESSAGE
 
 
 export const getDialogs = () => async (dispatch) => {
-    let res = await API.getDialogs();
-    try {
+    try{
+        let res = await API.getDialogs();
         dispatch(setDialogsSuccess(res.data))
     }
     catch (e) {
@@ -204,8 +204,8 @@ export const setDialogsCountMode = (method,mode) => (dispatch) => {
 };
 
 export const getMessageViewed = (messageId) => async (dispatch) => {
-    let res = await API.getMessageViewed(messageId);
     try {
+        let res = await API.getMessageViewed(messageId);
         dispatch(getViewedMessage(res.data,messageId));
     }
     catch (e) {
@@ -215,8 +215,8 @@ export const getMessageViewed = (messageId) => async (dispatch) => {
 
 export const getPreveMessages = (page) => async (dispatch,getState) => {
     let userId = getState().dataDialogs.selectDialogId;
-    let res = await API.getMessageDialogWithFriend(userId,page);
-    try {
+    try{
+        let res = await API.getMessageDialogWithFriend(userId,page);
         dispatch(setPrevMessages(res.data.items));
     }
     catch (e) {
@@ -227,8 +227,8 @@ export const getPreveMessages = (page) => async (dispatch,getState) => {
 export const getMessagesDialogNewerThenDate = () => async (dispatch,getState) => {
     let {selectDialogId,messageName} = getState().dataDialogs;
     let date = messageName[messageName.length - 1].addedAt;
-    let res = await API.getMessagesDialogNewerThenDate(selectDialogId,date);
     try {
+        let res = await API.getMessagesDialogNewerThenDate(selectDialogId,date);
         if(res.data.length > 0){
             dispatch(setNextMessages(res.data));
             dispatch(getMessageViewed(res.data.id));
@@ -240,8 +240,8 @@ export const getMessagesDialogNewerThenDate = () => async (dispatch,getState) =>
 };
 
 export const deleteMessage = (messageId) => async (dispatch) => {
-    let res = await API.deleteMessage(messageId);
     try {
+        let res = await API.deleteMessage(messageId);
         if(res.data.resultCode === 0){
             dispatch(setDeleteMessage())
         }

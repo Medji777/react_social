@@ -56,16 +56,15 @@ export const setUserStatus = (userStatus) => ({type: SET_USER_STATUS,payload: {u
 
 export const getUserProfileInfo = (userId, isAuthUser = false) => async (dispatch) => {
     if (userId) {
-        let res = await API.getProfileInfo(userId);
-        try{
-           if (isAuthUser) {
-               dispatch(setUserAvatarAndName(res.data.photos.small, res.data.fullName));
-               dispatch(setAuthUserInfo({...res.data}));
-           } else {
-               dispatch(setUserInfo({...res.data}));
-           }
-        }
-        catch (e) {
+        try {
+            let res = await API.getProfileInfo(userId);
+            if (isAuthUser) {
+                dispatch(setUserAvatarAndName(res.data.photos.small, res.data.fullName));
+                dispatch(setAuthUserInfo({...res.data}));
+            } else {
+                dispatch(setUserInfo({...res.data}));
+            }
+        } catch (e) {
             console.log(e.message)
         }
     }
@@ -73,8 +72,8 @@ export const getUserProfileInfo = (userId, isAuthUser = false) => async (dispatc
 
 export const setAuthUserProfile = (userAuthProfileInfo) => async (dispatch) => {
     dispatch(setIsLoadEdit(true));
-    let res = await API.setAuthProfileInfo(userAuthProfileInfo);
     try{
+        let res = await API.setAuthProfileInfo(userAuthProfileInfo);
         if (res.data.resultCode === 0) {
             dispatch(setAuthUserInfo({...userAuthProfileInfo}));
             dispatch(setIsLoadEdit(false));
@@ -86,8 +85,8 @@ export const setAuthUserProfile = (userAuthProfileInfo) => async (dispatch) => {
 };
 
 export const setUpdatePhoto = (img,userId) => async (dispatch) => {
-    let res = await API.setUpdatePhoto(img);
     try {
+        let res = await API.setUpdatePhoto(img);
         if (res.data.resultCode === 0) {
             dispatch(getUserProfileInfo(userId));
             dispatch(getUserInfoAuth());
@@ -99,8 +98,8 @@ export const setUpdatePhoto = (img,userId) => async (dispatch) => {
 };
 
 export const getStatusUser = (userId) => async (dispatch) => {
-    let res = await API.getStatusUser(userId);
     try {
+        let res = await API.getStatusUser(userId);
         if (res.status === 200) {
             dispatch(setUserStatus(res.data));
         }
@@ -111,8 +110,8 @@ export const getStatusUser = (userId) => async (dispatch) => {
 };
 
 export const setUpdateStatus = (status) => async (dispatch) => {
-    let res = await API.setUpdateStatus(status);
     try {
+        let res = await API.setUpdateStatus(status);
         if (res.data.resultCode === 0) {
             dispatch(setUserStatus(status));
             // dispatch(getUserInfoAuth());

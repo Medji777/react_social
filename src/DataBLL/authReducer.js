@@ -48,36 +48,34 @@ export const setUserAvatarAndName = (userAvatarUrl,userName) => ({type:SET_USER_
 export const checkInitialized = (isInitialized = true) => ({type:CHECK_COMPLETED, payload: {isInitialized}});
 
 export const getUserInfoAuth = () => async (dispatch) => {
-     let res = await API.getUserInfoAuth();
-        try {
-            if (res.data.resultCode === 0) {
-                dispatch(setUserInfoAuth(res.data.data.id));
-                dispatch(setIsAuth(true));
-                dispatch(getUserProfileInfo(res.data.data.id, true));
-                dispatch(setMessageErrorAuth(''));
-            } else {
-                dispatch(setMessageErrorAuth(res.data.messages[0]));
-            }
-            dispatch(checkInitialized());
+    try {
+        let res = await API.getUserInfoAuth();
+        if (res.data.resultCode === 0) {
+            dispatch(setUserInfoAuth(res.data.data.id));
+            dispatch(setIsAuth(true));
+            dispatch(getUserProfileInfo(res.data.data.id, true));
+            dispatch(setMessageErrorAuth(''));
+        } else {
+            dispatch(setMessageErrorAuth(res.data.messages[0]));
         }
-        catch(e){
-            console.log(e.message);
-        }
+        dispatch(checkInitialized());
+    } catch (e) {
+        console.log(e.message);
+    }
 };
 
 export const logOut = () => async (dispatch) => {
-    let res = await API.logOut();
-        try {
-            if (res.data.resultCode === 0) {
-                dispatch(setUserInfoAuth(null));
-                dispatch(setUserId(null));
-                dispatch(setUserAvatarAndName('',null));
-                dispatch(setIsAuth(false));
-            }
+    try {
+        let res = await API.logOut();
+        if (res.data.resultCode === 0) {
+            dispatch(setUserInfoAuth(null));
+            dispatch(setUserId(null));
+            dispatch(setUserAvatarAndName('', null));
+            dispatch(setIsAuth(false));
         }
-        catch(e){
-            console.log(e.message)
-        }
+    } catch (e) {
+        console.log(e.message)
+    }
 };
 
 export default authReducer;

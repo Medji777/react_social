@@ -93,8 +93,8 @@ export const isDisable = (id,flag) => ({type: DISABLE,id,flag});
 
 const followUnfollowFlow = async (dispatch,id,apiMethod,AC) => {
     dispatch(isDisable(id,true));
-    let res = await apiMethod(id);
     try{
+        let res = await apiMethod(id);
         if(res.data.resultCode === 0){
             dispatch(AC(id));
             dispatch(isDisable(id,false))
@@ -115,8 +115,8 @@ export const unfollow = (id) => (dispatch) => {
 
 export const getUsers = (page,count) => async (dispatch) => {
     dispatch(isLoading(true));
-    let res = await API.getUsers(page,count);
     try {
+        let res = await API.getUsers(page,count);
         dispatch(setUsers([...res.data.items]));
         dispatch(setTotalCount(res.data.totalCount));
         dispatch(isLoading(false));
@@ -129,8 +129,8 @@ export const getUsers = (page,count) => async (dispatch) => {
 export const getUsersSearch = (str,count) => async (dispatch) => {
     dispatch(isLoadingSearch(true));
     dispatch(setSearchUsersName(str));
-    let res = await API.getSearchUsers(str,count);
     try {
+        let res = await API.getSearchUsers(str,count);
         dispatch(setSearchUsers(res.data.items));
         dispatch(isLoadingSearch(false));
     }
