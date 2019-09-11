@@ -2,15 +2,32 @@
     position: relative;
     grid-area: h;
     background: #ccad78;
-    display: grid;
-    grid-template-areas: 'a b';
-    grid-template-columns: 5fr 1fr;
+    min-width: 100%;
+    filter: drop-shadow(0px 0px 1px #c2a573);
+    z-index: 1;
 }
 
-.header__logo {
-    width: 50px;
+.header__wrapper {
+    max-width: 1200px;
+    display: grid;
+    grid-template-areas: 'a с b';
+    grid-template-columns: 5fr 1fr 1.2fr;
+    margin: 0 auto;
 }
+
 .header img {
     grid-area: a;
+}
+
+@media only screen and (max-width: 1920px) {
+    .header__wrapper {
+        max-width: 1200px;
+    }
+}
+
+@media only screen and (max-width: 1366px) {
+    .header__wrapper {
+        max-width: 960px;
+    }
 }
 
