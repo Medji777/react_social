@@ -1,21 +1,25 @@
 import React from 'react';
-//Компонент ссылок из react-router-dom
 import {NavLink} from "react-router-dom";
-import styled from './Nav.module.css';
 import FriendsContainer from "./Friends/FriendsContainer";
+import styled from './Nav.module.css';
 
-const Nav = ()=>{
+const Nav = ({isAuth,isActive,isWidthResizeMode,onMenuClose})=>{
+
+    const menuLink = [
+        {id: 1, exact: true, path: '/profile', title: 'Profile'},
+        {id: 2, exact: false, path: '/dialogs', title: 'Messages'},
+        {id: 3, exact: false, path: '/news', title: 'News'},
+        {id: 4, exact: false, path: '/music', title: 'Music'},
+        {id: 5, exact: false, path: '/users', title: 'Find users'},
+        {id: 6, exact: false, path: '/settings', title: 'Settings'}
+    ];
+
     return (
-        <nav className={styled.nav}>
-            <ul>
+        <nav onClick={(e) => isWidthResizeMode && e.stopPropagation()} className={isActive ? `${styled.nav} ${styled.nav__active}` : `${styled.nav}`}>
+            <ul className={isAuth ? styled.nav__items : `${styled.nav__items} ${styled.not_auth}`}>
                 {/*Для использование ссылок компонета react-router-dom, вместо href импользуется to*/}
                 {/*activeClassName - задает уникальное значение активного класса, по default 'active'*/}
-                <li className={styled.item}><NavLink to="/profile" exact activeClassName={styled.active}>Profile</NavLink></li>
-                <li className={styled.item}><NavLink to="/dialogs" activeClassName={styled.active}>Messages</NavLink></li>
-                <li className={styled.item}><NavLink to="/news" activeClassName={styled.active}>News</NavLink></li>
-                <li className={styled.item}><NavLink to="/music" activeClassName={styled.active}>Music</NavLink></li>
-                <li className={styled.item}><NavLink to="/users" activeClassName={styled.active}>Find users</NavLink></li>
-                <li className={styled.item}><NavLink to="/settings" activeClassName={styled.active}>Settings</NavLink></li>
+                {menuLink.map(l => <li key={l.id} className={styled.item}><NavLink onClick={() => isWidthResizeMode && onMenuClose()} to={l.path} exact={l.exact} activeClassName={styled.active}>{l.title}</NavLink></li>)}
             </ul>
             <FriendsContainer />
         </nav>
