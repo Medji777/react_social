@@ -10,7 +10,7 @@
 
 .form__input span {
     position: absolute;
-    top: 3px;
-    right: 7px;
+    top: 15px;
+    right: 50px;
     font-size: 11px;
 }

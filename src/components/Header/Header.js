@@ -1,17 +1,19 @@
 import React from 'react';
+import SingContainer from "./Sing/Sing";
+import NewMessageCount from "./NewMessageCount/NewMessageCount";
+import LogoMenu from "./LogoMenu/LogoMenu";
 import styled from './Header.module.css';
-import SingInContainer from "./SingIn/SingInContainer";
-import logo from './../../assets/imgs/logo.png';
 
-const Header = ()=>{
-
-    return (
-        <header className={styled.header}>
-            <img src={logo} alt="logo" className={styled.header__logo}/>
-            <SingInContainer />
-        </header>
-    )
-
+const Header = ({countNewMessage,message,toggleMobileMenu,isWidthResizeMode,...props}) => {
+        return (
+            <header className={styled.header}>
+                <div className={styled.header__wrapper}>
+                    <LogoMenu toggleMobileMenu={toggleMobileMenu} isWidthResizeMode={isWidthResizeMode}/>
+                    {props.isAuth && <NewMessageCount countNewMessage={countNewMessage}/>}
+                    <SingContainer {...props} message={message}/>
+                </div>
+            </header>
+        )
 };
 
 export default Header;

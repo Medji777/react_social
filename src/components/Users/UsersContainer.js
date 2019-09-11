@@ -1,6 +1,11 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {UsersSelector} from "../../DataBLL/selectors";
+import {
+    getCount, getCurrentPageUsers, getIsAuth,
+    getIsLoading, getIsLoadingSearch, getToggleDisable,
+    getTotalCount, getUsersFromState,
+    UsersSelector
+} from "../../DataBLL/selectors";
 import Users from "./Users";
 import {
     setCurrentPage,
@@ -89,6 +94,10 @@ class UsersContainer extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return nextProps !== this.props
+    }
+
     componentWillUnmount() {
         const {updateUsers,resetSearchUsersName} = this.props;
         updateUsers(); // users: [] , currentPage: 1
@@ -97,39 +106,23 @@ class UsersContainer extends React.Component {
     }
 
     render() {
-        const {users, follow, unfollow, totalCount, searchUsersInfo,isLoading,isLoadingSearch,toggleDisable,isAuth} = this.props;
         return (
-            <Users users={users}
-                   isAuth={isAuth}
-                   follow={follow}
-                   unfollow={unfollow}
-                   totalCount={totalCount}
-                   searchUsersInfo={searchUsersInfo}
-                   isLoading={isLoading}
-                   isLoadingSearch={isLoadingSearch}
-                   toggleDisable={toggleDisable}
-                   setUserName={this.setUserName}
-                   setCount={this.setCount}
-                   // getUsersMore={this.getUsersMore}
-                   removeUsersMoreScroll={this.removeUsersMoreScroll}
-            />
+            <Users {...this.props} setUserName={this.setUserName} setCount={this.setCount} removeUsersMoreScroll={this.removeUsersMoreScroll}/>
         )
     }
 }
 
 const mapStateToProps = (state) => {
-    let {users, currentPage, count, totalCount, searchUsers,isLoading,isLoadingSearch,toggleDisable} = state.usersPage;
-    let {isAuth} = state.auth;
     return {
-        users,
-        currentPage,
-        count,
-        totalCount,
-        isLoading,
-        isLoadingSearch,
-        toggleDisable,
-        isAuth,
-        searchUsersInfo: UsersSelector(searchUsers)
+        users: getUsersFromState(state),
+        currentPage: getCurrentPageUsers(state),
+        count: getCount(state),
+        totalCount: getTotalCount(state),
+        isLoading: getIsLoading(state),
+        isLoadingSearch: getIsLoadingSearch(state),
+        toggleDisable: getToggleDisable(state),
+        isAuth: getIsAuth(state),
+        searchUsersInfo: UsersSelector(state)
     }
 };
 

@@ -1,18 +1,18 @@
 import React from 'react';
 import Popup from "reactjs-popup";
-//import styled from './Popup.module.css';
+import styled from './Popup.module.css';
 
-const PopUp = (props) => {
-
+const PopUp = ({isOpen, closePopUp, children}) => {
     return (
-        <Popup open={props.isOpen} onClose={props.closePopUp} modal closeOnDocumentClick>
+        <Popup open={isOpen} onClose={closePopUp} modal closeOnDocumentClick>
             <>
-                <div><p>Загрузка новой фотографии</p><span className="close" onClick={props.closePopUp}>&times;</span></div>
-                {props.children}
+                <div className={styled.modal_header}><p>Загрузка новой фотографии</p>
+                    <span className={`${styled.modal_close} close`} onClick={closePopUp}>&times;</span>
+                </div>
+                {children}
             </>
         </Popup>
     );
-
 };
 
 export default PopUp;

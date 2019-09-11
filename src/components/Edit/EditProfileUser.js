@@ -1,31 +1,28 @@
 import React from 'react';
-import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import AnonUsersHOC from "../HOC/AnonUsersHOC";
 import {setAuthUserProfile,setChangeAuthProfile} from './../../DataBLL/profileReducer';
 import EditFormUser from "./EditFormUser";
 import {compose} from "redux";
+import {getIsLoadEdit, getIsWidthResizeMode, getUserAuthProfileInfo} from "../../DataBLL/selectors";
+import styled from './Edit.module.css';
 
-const EditProfileUser = ({setAuthUserProfile, profile, isLoadEdit}) => {
+const EditProfileUser = ({setAuthUserProfile, profile, isLoadEdit,isWidthResizeMode}) => {
 
     const getInputValue = (value) => {
         setAuthUserProfile && setAuthUserProfile(value);
     };
 
     return (
-        <div>
+        <div className={styled.edit}>
             <h2>EDIT</h2>
-            <EditReduxForm onSubmit={getInputValue} initialValues={profile} isLoadEdit={isLoadEdit}/>
+            <EditFormUser onSubmit={getInputValue} initialValues={profile} isLoadEdit={isLoadEdit} isWidthResizeMode={isWidthResizeMode}/>
         </div>
     )
-
 };
 
-const EditReduxForm = reduxForm({
-    form: 'editForm'
-})(EditFormUser);
-
 export default compose(connect((state) => ({
-    profile: state.dataProfile.userAuthProfileInfo,
-    isLoadEdit: state.dataProfile.isLoadEdit,
+    profile: getUserAuthProfileInfo(state),
+    isLoadEdit: getIsLoadEdit(state),
+    isWidthResizeMode: getIsWidthResizeMode(state)
 }), {setAuthUserProfile,setChangeAuthProfile}),AnonUsersHOC)(EditProfileUser);

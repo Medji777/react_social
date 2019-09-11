@@ -22,7 +22,7 @@
     user-select: none;
 }
 .user .user_cont {
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     width: 87%;
     margin: 0 5px 10px 5px;
@@ -34,12 +34,13 @@
 }
 .user .user_cont__left, .user .user_cont__right {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    /*flex-direction: column;*/
+    /*justify-content: space-between;*/
 }
 .user .user_cont__left {
-
+    flex-direction: row;
+    justify-content: space-between;
 }
-.user .user_cont__right {
-
+.user .user_cont__right p {
+    word-break: break-word;
 }

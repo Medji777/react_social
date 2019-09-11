@@ -2,14 +2,15 @@ import React from 'react';
 import {Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {compose} from "redux";
+import {getIsAuth} from "../../DataBLL/selectors";
 
-const redirectAnonUsersHoc = (Component) => (props) => {
+ const redirectAnonUsersHoc = (Component) => (props) => {
 
-    if (!props.isAuth) {
-        return <Redirect to='/not-auth'/>
-    }
+     if (!props.isAuth) {
+         return <Redirect to='/not-auth'/>
+     }
 
-    return <Component {...props}/>
-};
+     return <Component {...props}/>
+ };
 
-export default compose(connect((state) => ({isAuth: state.auth.isAuth}), null), redirectAnonUsersHoc);
+export default compose(connect((state) => ({isAuth: getIsAuth(state)}), null), redirectAnonUsersHoc);

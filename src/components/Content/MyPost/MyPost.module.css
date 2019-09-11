@@ -2,39 +2,26 @@
     display: flex;
     flex-direction: column;
 }
-.post .form_post label {
+.post .form_post label, .form_post h2 {
     font: 1.6em sans-serif;
     margin-left: 20px;
 }
 .post .form_post textarea {
     resize: none;
     outline: none;
-    width: 90%;
+    width: 88%;
     margin: 10px 20px;
     padding: 5px;
 }
-.post .form_post .btn__post {
+.btn__post {
     display: flex;
     flex-direction: row-reverse;
 }
-.post .form_post .btn__post button {
-    width: 100px;
-    border: 0;
-    background: rgba(63, 177, 62, 0.9);
-    color: white;
-    outline: none;
-    padding: 5px;
+
+.btn__post button {
     margin-right: 68px;
-    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.5);
 }
-.post .form_post .btn__post button:hover {
-    background: rgba(48, 216, 70, 0.53);
-}
-.post .form_post .btn__post button:active {
-    background: rgba(48, 216, 70, 0.53);
-    box-shadow: none;
-    transform: translate(1px,1px);
-}
+
 .post_new {
     padding: 10px;
 }
@@ -56,7 +43,7 @@
 }
 
 @media only screen and (max-width: 1366px) {
-    .post .form_post .btn__post button {
-        margin-right: 43px;
+    .btn__post button {
+        margin-right: calc(10% - 17px);
     }
 }

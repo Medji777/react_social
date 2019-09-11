@@ -1,5 +1,4 @@
 import React from 'react';
-//import '../../styles/Content.module.css'
 import styled from '../MyPost.module.css';
 
 const Post = ({img,post}) => {
