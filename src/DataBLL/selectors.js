@@ -49,6 +49,7 @@ export const getPost = state => state.dataProfile.post;
 export const getCurrentUserId = state => state.dataProfile.currentUserId;
 export const getCountNewMessage = state => state.dataDialogs.countNewMessage;
 export const getGetDialogsCountMode = state => state.dataDialogs.getDialogsCountMode;
+export const getUserStatus = state => state.dataProfile.userStatus;
 
 // login
 export const getCurrentId = state => state.login.currentId;
