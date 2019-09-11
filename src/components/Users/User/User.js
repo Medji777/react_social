@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import styled from './User.module.css';
 
 const User = memo(({img,id,name,status,city,country,btn,follow,unfollow,toggleDisable,isAuth}) => {
-    
+
     return (
         <div className={styled.user}>
             <div className={styled.user_avatar}>
