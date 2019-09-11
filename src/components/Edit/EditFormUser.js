@@ -21,7 +21,7 @@ const EditFormUser = React.memo(({initialValues, handleSubmit, isLoadEdit,isWidt
     const wrap = {transform: 'translateY(-20%)', minHeight: 'auto'};
 
     if (!initialValues) return <div className={styled.edit__loading}><Loading wrap={wrap}/></div>;
-    
+
     const {contacts} = initialValues;
 
     return <form onSubmit={handleSubmit} className={styled.form__edit}>
