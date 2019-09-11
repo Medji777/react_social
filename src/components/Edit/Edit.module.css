@@ -1,3 +1,11 @@
+.edit{
+
+}
+
+.edit h2 {
+    padding: 10px;
+}
+
 .edit__loading {
     display: flex;
     flex-direction: column;
@@ -14,6 +22,7 @@
 
 .form__edit_left {
     grid-area: a;
+    padding: 10px;
 }
 
 .form__edit_right {
